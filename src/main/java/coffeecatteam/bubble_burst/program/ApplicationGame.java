@@ -1,21 +1,15 @@
 package coffeecatteam.bubble_burst.program;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Event;
 
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Icons;
-import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Button;
-import com.mrcrayfish.device.api.app.component.Image;
-import com.mrcrayfish.device.api.app.component.Label;
 
-import coffeecatteam.bubble_burst.Reference;
 import coffeecatteam.bubble_burst.program.layouts.LayoutGame;
 import coffeecatteam.bubble_burst.program.layouts.LayoutInstructions;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 public class ApplicationGame extends Application {
 
@@ -61,6 +55,7 @@ public class ApplicationGame extends Application {
 
 	@Override
 	public void onTick() {
+		//final EntityPlayer player = event.getEntityPlayer();
 		this.layoutGame.onTick();
 		super.onTick();
 	}
