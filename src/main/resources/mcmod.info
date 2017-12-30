@@ -3,7 +3,7 @@
   "modid": "bubble_burst",
   "name": "Bubble Burst",
   "description": "Burst the bubbles!",
-  "version": "2.1",
+  "version": "2.1-pre1",
   "mcversion": "${mcversion}",
   "url": "",
   "authorList": ["CoffeeCatTeam"],

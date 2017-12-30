@@ -3,43 +3,41 @@ package coffeecatteam.bubble_burst.program.layouts;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Icons;
 import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Button;
 import com.mrcrayfish.device.api.app.component.Image;
 import com.mrcrayfish.device.api.app.component.Label;
-import com.mrcrayfish.device.tileentity.TileEntityLaptop;
 
 import coffeecatteam.bubble_burst.Reference;
 import coffeecatteam.bubble_burst.SoundHandler;
+import coffeecatteam.bubble_burst.program.ApplicationGame;
 import coffeecatteam.bubble_burst.program.component.Sprite;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.structure.WoodlandMansion;
 
 public class LayoutGame extends Layout {
 
-	private Application application;
+	private ApplicationGame application;
 
 	private Image background;
 	private Button buttonBack;
 
+	private Label labelVersion;
+
 	// Sprites
 	private Sprite cursor;
 	private List<Sprite> hydrogen_bubbles;
+	private List<Sprite> bombs;
 
 	// Score
 	private Label labelScore;
-	private long score;
+	private long score = -4l;
+	private boolean canScoreUpdate = false;
 
-	public LayoutGame(int width, int height, Application application) {
+	public LayoutGame(int width, int height, ApplicationGame application) {
 		super(width, height);
 		this.application = application;
 	}
@@ -47,23 +45,33 @@ public class LayoutGame extends Layout {
 	@Override
 	public void init() {
 		this.hydrogen_bubbles = new ArrayList<>();
-		int width = this.application.getWidth();
-		int height = this.application.getHeight();
+		this.bombs = new ArrayList<>();
 
-		this.background = new Image(0, 0, width, height, width * 2 - 145, height / 2 - 49, width + 57, height + 155,
+		this.background = new Image(0, 0, this.width, this.height, this.width * 2 - 145, this.height / 2 - 49,
+				this.width + 57, this.height + 155,
 				new ResourceLocation(Reference.MODID, "textures/backgrounds/background.png"));
 		super.addComponent(this.background);
 
-		int bubbles = 5; // default: 5
-		for (int i = 0; i < bubbles; i++) {
-			Sprite hydrogen_bubble = new Sprite(randInt(40, 160), ((height / 2) - 4) + randInt(-10, 10),
+		// Sprites
+		int bubblesAmount = 6; // default: 6
+		for (int i = 0; i < bubblesAmount; i++) {
+			Sprite hydrogen_bubble = new Sprite(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
 					new ResourceLocation(Reference.MODID, "textures/sprites/hydrogen_bubble.png"));
 			this.hydrogen_bubbles.add(hydrogen_bubble);
 			super.addComponent(this.hydrogen_bubbles.get(i));
 		}
 
-		// (width / 2) - 4, (height / 2) - 4
-		this.cursor = new Sprite(5, height / 2, new ResourceLocation(Reference.MODID, "textures/sprites/cursor.png"));
+		int bombAmount = bubblesAmount / 2; // default: 2
+		for (int i = 0; i < bombAmount; i++) {
+			Sprite bomb = new Sprite(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
+					new ResourceLocation(Reference.MODID, "textures/sprites/bomb.png"));
+			this.bombs.add(bomb);
+			super.addComponent(this.bombs.get(i));
+		}
+
+		// (this.width / 2) - 4, (this.height / 2) - 4
+		this.cursor = new Sprite(5, this.height / 2,
+				new ResourceLocation(Reference.MODID, "textures/sprites/cursor.png"));
 		super.addComponent(this.cursor);
 
 		this.buttonBack = new Button(3, 15, Icons.ARROW_LEFT);
@@ -74,10 +82,19 @@ public class LayoutGame extends Layout {
 		});
 		super.addComponent(this.buttonBack);
 
+		// Score
+		this.labelVersion = new Label("Version: " + Reference.VERSION, 3, this.height - 10);
+		this.labelVersion.setTextColour(Color.LIGHT_GRAY);
+		this.labelVersion.setScale(0.95D);
+		super.addComponent(this.labelVersion);
+
 		this.labelScore = new Label("Score: " + this.score, 3, 3);
 		this.labelScore.setTextColour(Color.LIGHT_GRAY);
 		this.labelScore.setScale(0.95D);
 		super.addComponent(this.labelScore);
+
+		//this.score -= bubblesAmount;
+		this.score = this.application.getTopScore();
 
 		super.init();
 	}
@@ -91,110 +108,91 @@ public class LayoutGame extends Layout {
 
 	public void onTick() {
 		int speed = 5; // default: 5
-		int width = this.application.getWidth();
-		int height = this.application.getHeight();
 
 		if (this.application.getCurrentLayout() == this) {
+			// Hydrogen Bubbles
 			for (Sprite hydrogen_bubble : this.hydrogen_bubbles) {
 
 				hydrogen_bubble.yPosition += speed;
-				// System.out.println(this.hydrogen_bubbles.size() + " | " + i +
-				// " | " + hydrogen_bubble.yPosition + " | " +
-				// hydrogen_bubble.xPosition);
-
-				if (hydrogen_bubble.yPosition > height * 2) {
-					respawn(hydrogen_bubble, width, height);
+				if (hydrogen_bubble.yPosition > this.height * 2) {
+					respawn(hydrogen_bubble, this.width, this.height);
 				}
+				// System.out.println(this.hydrogen_bubbles.size() + " | " + hydrogen_bubble.yPosition + " | " + hydrogen_bubble.xPosition);
 
-				int offset = 8; // default: 8
-				if (this.cursor.xPosition + offset > hydrogen_bubble.xPosition
-						&& this.cursor.xPosition - offset < hydrogen_bubble.xPosition) {
-					if (this.cursor.yPosition + offset > hydrogen_bubble.yPosition
-							&& this.cursor.yPosition - offset < hydrogen_bubble.yPosition) {
-						updateScore(this.score, this.labelScore);
+				// Check if cursor is touching a hydrogen bubble
+				if (this.cursor.isTouching(hydrogen_bubble)) {
+					updateScore(this.score, 1l, this.labelScore);
 
-						TileEntityLaptop laptop = new TileEntityLaptop();
-						laptop.setPos(this.application.getLaptopPositon());
-						BlockPos pos = laptop.getPos();
+					Minecraft.getMinecraft().player.playSound(SoundHandler.BUBBLE_POP, 1.0f,
+							(0.5f + new Random().nextFloat()) * 1.5f);
+					respawn(hydrogen_bubble, this.width, this.height);
+				}
+			}
+			// Bombs
+			for (Sprite bomb : this.bombs) {
 
-						World world = laptop.getWorld();
-						// final EntityPlayer player =
-						// world.getClosestPlayer(pos.getX(), pos.getY(),
-						// pos.getZ(), 3l, false);
+				bomb.yPosition += speed;
+				if (bomb.yPosition > this.height * 2) {
+					respawn(bomb, this.width, this.height);
+				}
+				// System.out.println(this.hydrogen_bubbles.size() + " | " + hydrogen_bubble.yPosition + " | " + hydrogen_bubble.xPosition);
 
-						// world.playSound(null, pos, SoundHandler.BUBBLE_POP,
-						// SoundCategory.BLOCKS,
-						// 0.5f, 1.0f);
+				// Check if cursor is touching a hydrogen bubble
+				if (this.cursor.isTouching(bomb)) {
+					updateScore(this.score, -2l, this.labelScore);
 
-						respawn(hydrogen_bubble, width, height);
-					}
+					if (randInt(0, 10) < 2)
+						Minecraft.getMinecraft().player.playSound(SoundHandler.BOMB_1, 0.2f, (0.5f + new Random().nextFloat())*1.5f);
+					else
+						Minecraft.getMinecraft().player.playSound(SoundHandler.BOMB_2, 0.2f, (0.5f + new Random().nextFloat())*1.5f);
+					respawn(bomb, this.width, this.height);
 				}
 			}
 		} else {
-			this.score = -4;
+			this.score = this.application.getTopScore();
 		}
+		
+		if (this.score < 0)
+			this.score = 0;
+		if (this.canScoreUpdate && this.application.getCurrentLayout() == this)
+			updateScore(this.score, 0l, this.labelScore);
+		else
+			this.canScoreUpdate = true;
 	}
-	
+
+	public long getScore() {
+		return score;
+	}
+
 	boolean fire_ball = false;
 	boolean bomb = false;
-	@Override
-	public void handleKeyTyped(char character, int code) {
-		//System.out.println(character + " | " + code);
-		if (character == '1' && code == 2) {
-			fire_ball = true;
-			bomb = false;
-		}
-		if (character == '2' && code == 3) {
-			fire_ball = false;
-			bomb = true;
-		}
-		if (character == '3' && code == 4) {
-			fire_ball = false;
-			bomb = false;
-		}
-		super.handleKeyTyped(character, code);
-	}
 
-	public void updateScore(long score, Label label) {
-		score++;
+	public void updateScore(long score, long amount, Label label) {
+		score += amount;
 		label.setText("Score: " + this.score);
 
-		Color LIGHT_GRAY = new Color(128, 128, 128); // Level: 1 | score < 500
-		Color GREEN = new Color(0, 255, 0); // Level: 2 | score > 500
-		Color YELLOW = new Color(255, 255, 0); // Level: 3 | score > 1000
-		Color ORANGE = new Color(255, 190, 0); // Level: 4 | score > 1500
-		Color RED = new Color(255, 0, 0); // Level: 5 | score > 2000
-		Color DARK_RED = new Color(127, 0, 0); // Level: 6 | score > 2500
-		Color MAGENTA = new Color(255, 0, 220); // Level: 7 | score > 5000
-		Color PURPLE = new Color(178, 0, 255); // Level: 8 | score > 10000
-		Color CYAN = new Color(0, 148, 255); // Level: 9 | score > 15000
-		Color DARK_BLUE = new Color(0, 38, 255); // Level: 10 | score > 20000
+		label.setTextColour(score > 25000 ? Colors.DARK_BLUE
+				: score > 20000 ? Colors.CYAN
+						: score > 15000 ? Colors.PURPLE
+								: score > 10000 ? Colors.MAGENTA
+										: score > 5000 ? Colors.DARK_RED
+												: score > 2000 ? Colors.RED
+														: score > 1500 ? Colors.ORANGE
+																: score > 1000 ? Colors.YELLOW
+																		: score > 500 ? Colors.GREEN
+																				: Colors.LIGHT_GRAY);
 
-		label.setTextColour(score > 25000 ? DARK_BLUE
-				: score > 20000 ? CYAN
-						: score > 15000 ? PURPLE
-								: score > 10000 ? MAGENTA
-										: score > 5000 ? DARK_RED
-												: score > 2000 ? RED
-														: score > 1500 ? ORANGE
-																: score > 1000 ? YELLOW
-																		: score > 500 ? GREEN : LIGHT_GRAY);
-
-		this.score = score;
+		this.application.setTopScore(score);
+		this.score = this.application.getTopScore();
+		//System.out.println(this.score + " | " + this.application.getTopScore());
 		this.labelScore = label;
+		this.application.markDirty();
 	}
 
-	public void respawn(Sprite hydrogen_bubble, int width, int height) {
-		ResourceLocation sprite = new ResourceLocation(Reference.MODID, "textures/sprites/hydrogen_bubble.png");
-		if (fire_ball)
-			sprite = new ResourceLocation(Reference.MODID, "textures/sprites/fire_ball.png");
-		if (bomb)
-			sprite = new ResourceLocation(Reference.MODID, "textures/sprites/bomb.png");
-		hydrogen_bubble.setSprite(sprite);
-		
-		int x = randInt(width - 40, width + 50);
-		hydrogen_bubble.xPosition = x; // 160; // x; // 250; // x;
-		hydrogen_bubble.yPosition = ((height / 2) - 4) + randInt(-10, 10);
+	public void respawn(Sprite sprite, int width, int height) {
+		int x = randInt(this.width - 40, width + 50);
+		sprite.xPosition = x; // 160; // x; // 250; // x;
+		sprite.yPosition = ((height / 2) - 4) + randInt(-10, 10);
 	}
 
 	public static int randInt(int min, int max) {

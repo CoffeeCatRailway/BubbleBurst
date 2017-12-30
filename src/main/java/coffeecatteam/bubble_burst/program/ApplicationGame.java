@@ -1,15 +1,16 @@
 package coffeecatteam.bubble_burst.program;
 
-import java.awt.Event;
-
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Icons;
 import com.mrcrayfish.device.api.app.component.Button;
+import com.mrcrayfish.device.api.app.component.Label;
 
+import coffeecatteam.bubble_burst.Reference;
+import coffeecatteam.bubble_burst.program.component.Sprite;
 import coffeecatteam.bubble_burst.program.layouts.LayoutGame;
 import coffeecatteam.bubble_burst.program.layouts.LayoutInstructions;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 public class ApplicationGame extends Application {
 
@@ -17,20 +18,34 @@ public class ApplicationGame extends Application {
 	private Button buttonStart;
 	private Button buttonInstructions;
 
+	private Label labelVersion;
+	private Sprite fire_stick;
+
 	// Layouts
 	private LayoutGame layoutGame;
 	private LayoutInstructions layoutInstructions;
 
 	// Game
+	private long topScore;
+	public boolean scoreInit = false;
 
 	public ApplicationGame() {
 		this.setDefaultWidth(95);
-		this.setDefaultHeight(55);
+		this.setDefaultHeight(65);
+	}
+
+	public long getTopScore() {
+		return topScore;
+	}
+
+	public void setTopScore(long topScore) {
+		this.topScore = topScore;
 	}
 
 	public void init() {
+
 		this.layoutGame = new LayoutGame(200, 100, this);
-		this.layoutInstructions = new LayoutInstructions(200, 120, this);
+		this.layoutInstructions = new LayoutInstructions(277, 115, this);
 
 		// Start Menu
 		this.buttonStart = new Button(5, 5, "Start", Icons.PLAY);
@@ -49,20 +64,36 @@ public class ApplicationGame extends Application {
 		});
 		super.addComponent(this.buttonInstructions);
 
-		// Game
+		this.labelVersion = new Label("Version: " + Reference.VERSION, 5, this.getHeight() - 12);
+		super.addComponent(this.labelVersion);
 		
+		this.fire_stick = new Sprite(60, 5, new ResourceLocation(Reference.MODID, "textures/sprites/cursor.png"));
+		this.fire_stick.setScale(1.5f);
+		super.addComponent(this.fire_stick);
+	}
+	
+	@Override
+	public void markDirty() {
+		super.markDirty();
 	}
 
 	@Override
 	public void onTick() {
-		//final EntityPlayer player = event.getEntityPlayer();
 		this.layoutGame.onTick();
 		super.onTick();
 	}
 
+	@Override
+	public void onClose() {
+		this.setTopScore(this.layoutGame.getScore());
+		super.onClose();
+	}
+
 	public void load(NBTTagCompound nbt) {
+		this.topScore = nbt.getLong("topScore");
 	}
 
 	public void save(NBTTagCompound nbt) {
+		nbt.setLong("topScore", this.getTopScore());
 	}
 }

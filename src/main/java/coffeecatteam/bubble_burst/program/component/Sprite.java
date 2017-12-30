@@ -8,6 +8,7 @@ import com.mrcrayfish.device.api.app.Component;
 import com.mrcrayfish.device.core.Laptop;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -24,6 +25,8 @@ public class Sprite extends Component {
 	private int textureWidth;
 	private int textureHeight;
 
+	private float scale = 1.0f;
+
 	/**
 	 * Creates a sprite (animated image) with ResourceLocation sprite.
 	 * 
@@ -36,7 +39,8 @@ public class Sprite extends Component {
 	}
 
 	/**
-	 * Creates a sprite (animated image) with ResourceLocation sprite and sets the width and height of the texture.
+	 * Creates a sprite (animated image) with ResourceLocation sprite and sets
+	 * the width and height of the texture.
 	 * 
 	 * @param left
 	 * @param top
@@ -49,6 +53,30 @@ public class Sprite extends Component {
 		this.sprite = sprite;
 		this.textureWidth = textureWidth;
 		this.textureHeight = textureHeight;
+	}
+
+	/**
+	 * Sets the scale of the sprite.
+	 * 
+	 * @param scale
+	 */
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+
+	/**
+	 * Checks if this sprite is touching another.
+	 * 
+	 * @param sprite
+	 */
+	public boolean isTouching(Sprite sprite) {
+		int offset = this.textureWidth / 8;
+		if (this.xPosition + offset > sprite.xPosition && this.xPosition - offset < sprite.xPosition) {
+			if (this.yPosition + offset > sprite.yPosition && this.yPosition - offset < sprite.yPosition) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -72,15 +100,20 @@ public class Sprite extends Component {
 	protected void render(Laptop laptop, Minecraft mc, int x, int y, int mouseX, int mouseY, boolean windowActive,
 			float partialTicks) {
 		if (this.visible) {
-			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F,
-					color.getAlpha() / 255F);
-			mc.getTextureManager().bindTexture(this.sprite);
+			GlStateManager.pushMatrix();
+			{
+				GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F,
+						color.getAlpha() / 255F);
+				//GlStateManager.scale(scale, scale, 0);
+				mc.getTextureManager().bindTexture(sprite);
 
-			drawModalRectWithCustomSizedTexture(xPosition, yPosition, (currentProgress % 8) * 16,
-					16 + 16 * (int) Math.floor((double) currentProgress / 8), 16, 16, this.textureWidth,
-					this.textureHeight);
+				drawModalRectWithCustomSizedTexture(xPosition, yPosition, (currentProgress % 8) * 16,
+						16 + 16 * (int) Math.floor((double) currentProgress / 8), 16, 16,
+						textureWidth, textureHeight);
 
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			}
+			GlStateManager.popMatrix();
 		}
 	}
 }
