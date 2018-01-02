@@ -1,0 +1,6 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "bubble_burst:items/fire_stick"
+    }
+}
