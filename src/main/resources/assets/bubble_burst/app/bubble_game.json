@@ -1,0 +1,12 @@
+{
+    "name": "Bubble Burst",
+    "author": "CoffeeCatRailway",
+    "description": "${desc}",
+    "version": "1.0",
+    "icon": "bubble_burst:textures/app/icon/bubble_game.png",
+    "screenshots": [
+        "bubble_burst:textures/app/screenshots/screenshot1.png",
+        "bubble_burst:textures/app/screenshots/screenshot2.png",
+        "bubble_burst:textures/app/screenshots/screenshot3.png"
+    ]
+}

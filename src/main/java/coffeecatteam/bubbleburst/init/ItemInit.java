@@ -5,6 +5,7 @@ import java.util.Set;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.init.items.ItemBase;
+import coffeecatteam.bubbleburst.init.items.ItemBomb;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -20,10 +21,8 @@ public class ItemInit {
 	public static Item bomb;
 
 	public static void init() {
-		fire_stick = new ItemBase("fire_stick");
-		fire_stick.setMaxStackSize(1);
-		bomb = new ItemBase("bomb");
-		bomb.setMaxStackSize(8);
+		fire_stick = new ItemBase("fire_stick", 1);
+		bomb = new ItemBomb("bomb");
 	}
 
 	@EventBusSubscriber(modid = Reference.MODID)
