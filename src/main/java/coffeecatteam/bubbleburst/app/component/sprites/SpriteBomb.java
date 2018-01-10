@@ -22,7 +22,7 @@ public class SpriteBomb extends SpriteObj {
 	public SpriteBomb(int x, int y, int scoreIncrease) {
 		super(x, y, 8, BOMB);
 		setScoreIncrease((long) scoreIncrease);
-		setLength(10);
+		setLength(5);
 	}
 
 	@Override
@@ -39,6 +39,7 @@ public class SpriteBomb extends SpriteObj {
 		if (layoutGame.cursor.isTouching(this)) {
 			if (!(this.getSprite().equals(EXPLOSION))) {
 				layoutGame.updateScore(layoutGame.getScore(), -getScoreIncrease(), layoutGame.labelScore);
+				layoutGame.updateBombCount(layoutGame.getBombCount(), 1, layoutGame.labelBombCount);
 
 				if (layoutGame.randInt(0, 10) < 2)
 					mc.player.playSound(SoundHandler.BOMB_1, 0.2f, (0.5f + new Random().nextFloat()) * 1.5f);

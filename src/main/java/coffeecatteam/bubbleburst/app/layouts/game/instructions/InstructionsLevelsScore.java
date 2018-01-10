@@ -13,13 +13,13 @@ import com.mrcrayfish.device.api.app.component.Text;
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
-import coffeecatteam.bubbleburst.app.layouts.LayoutStanard;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.utill.Utills.Colors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
-public class InstructionsLevelsScore extends LayoutStanard {
+public class InstructionsLevelsScore extends LayoutStandard {
 
 	private Button buttonBack;
 	private Sprite hydrogen_bubble;
@@ -86,7 +86,7 @@ public class InstructionsLevelsScore extends LayoutStanard {
 		this.textInfo = new Text("", 3, 35, 99);
 		this.textInfo.setTextColour(Color.DARK_GRAY);
 		this.textInfo.setText("Score Info:" + "\nBubbles | +random(1,2)" + "\nBombs   | -random(2,3)"
-				+ "\n\n§4§LScore will be reset when time is up!");
+				+ "\n§4§LScore will be reset when time is up!");
 		super.addComponent(this.textInfo);
 
 		int liOffset = 40;

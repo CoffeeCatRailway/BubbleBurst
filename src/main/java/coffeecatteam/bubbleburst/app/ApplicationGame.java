@@ -37,7 +37,7 @@ public class ApplicationGame extends Application {
 
 	// Game
 	private long topScore;
-	public boolean scoreInit = false;
+	private long topBombCount;
 
 	public ApplicationGame() {
 		this.setDefaultWidth(95);
@@ -50,6 +50,14 @@ public class ApplicationGame extends Application {
 
 	public void setTopScore(long topScore) {
 		this.topScore = topScore;
+	}
+	
+	public long getTopBombCount() {
+		return topBombCount;
+	}
+	
+	public void setTopBombCount(long topBombCount) {
+		this.topBombCount = topBombCount;
 	}
 
 	public void init() {
@@ -134,11 +142,17 @@ public class ApplicationGame extends Application {
 
 	public void load(NBTTagCompound nbt) {
 		this.topScore = nbt.getLong("topScore");
+		this.topBombCount = nbt.getLong("topBombCount");
+		
+		this.layoutGame.load(nbt);
 		this.layoutGameScores.load(nbt);
 	}
 
 	public void save(NBTTagCompound nbt) {
 		nbt.setLong("topScore", this.getTopScore());
+		nbt.setLong("topBombCount", this.getTopBombCount());
+		
+		this.layoutGame.save(nbt);
 		this.layoutGameScores.save(nbt);
 	}
 }

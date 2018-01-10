@@ -18,13 +18,13 @@ import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteHydrogenBall;
-import coffeecatteam.bubbleburst.app.layouts.LayoutStanard;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.utill.Utills.Colors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
-public class LayoutGame extends LayoutStanard {
+public class LayoutGame extends LayoutStandard {
 
 	private Image background;
 	private Button buttonBack;
@@ -36,7 +36,7 @@ public class LayoutGame extends LayoutStanard {
 	public Label labelTimer;
 	private static long time;
 
-	private int maxGameTime = 30*4; // 30 = 1 min
+	private int maxGameTime = 30 * 4; // 30 = 1 min
 	private int timer = 0;
 
 	private long newTime;
@@ -55,8 +55,11 @@ public class LayoutGame extends LayoutStanard {
 	private boolean canScoreUpdate = false;
 	private boolean resetScore = false;
 
-	private String[] gameScores;
-	private String gameScorePlayer;
+	// Bomb Count
+	public Label labelBombCount;
+	private long bombCount = 0l;
+	private boolean canBombCountUpdate = false;
+	private boolean resetBombCount = false;
 
 	public LayoutGame(int width, int height, ApplicationGame application) {
 		super(width, height, application);
@@ -91,8 +94,7 @@ public class LayoutGame extends LayoutStanard {
 
 		int bombAmount = 3; // default: 3
 		for (int i = 0; i < bombAmount; i++) {
-			Sprite bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
-					randInt(2, 3));
+			Sprite bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(2, 3));
 			this.bombs.add(bomb);
 			super.addComponent(this.bombs.get(i));
 		}
@@ -127,11 +129,22 @@ public class LayoutGame extends LayoutStanard {
 		this.labelScore.setScale(0.95D);
 		super.addComponent(this.labelScore);
 
+		this.labelBombCount = new Label("Bombs hit: " + this.bombCount, 3, 15);
+		this.labelBombCount.setTextColour(Color.LIGHT_GRAY);
+		this.labelBombCount.setScale(0.95D);
+		super.addComponent(this.labelBombCount);
+
 		if (resetScore) {
 			this.score = 0;
 			resetScore = false;
 		} else {
 			this.score = this.application.getTopScore();
+		}
+		if (resetBombCount) {
+			this.bombCount = 0;
+			resetBombCount = false;
+		} else {
+			this.bombCount = this.application.getTopBombCount();
 		}
 	}
 
@@ -149,7 +162,8 @@ public class LayoutGame extends LayoutStanard {
 			newTime = currentTime - time;
 
 			this.cursor.update(application, this, Minecraft.getMinecraft());
-			this.hydrogen_bubbles.forEach(hydrogen_bubble -> hydrogen_bubble.update(application, this, Minecraft.getMinecraft()));
+			this.hydrogen_bubbles
+					.forEach(hydrogen_bubble -> hydrogen_bubble.update(application, this, Minecraft.getMinecraft()));
 			this.bombs.forEach(bomb -> bomb.update(application, this, Minecraft.getMinecraft()));
 
 			// End Time
@@ -171,12 +185,21 @@ public class LayoutGame extends LayoutStanard {
 			this.score = this.application.getTopScore();
 		}
 
+		// Score Check
 		if (this.score < 0)
 			this.score = 0;
 		if (this.canScoreUpdate && this.application.getCurrentLayout() == this)
 			updateScore(this.score, 0l, this.labelScore);
 		else
 			this.canScoreUpdate = true;
+
+		// Bomb Count Check
+		if (this.bombCount < 0)
+			this.bombCount = 0;
+		if (this.canBombCountUpdate && this.application.getCurrentLayout() == this)
+			updateBombCount(this.bombCount, 0l, this.labelBombCount);
+		else
+			this.canBombCountUpdate = true;
 	}
 
 	@Override
@@ -193,7 +216,7 @@ public class LayoutGame extends LayoutStanard {
 	public long getNewTime() {
 		return newTime;
 	}
-	
+
 	public int getCurrentGameTime() {
 		return maxGameTime - timer;
 	}
@@ -206,6 +229,10 @@ public class LayoutGame extends LayoutStanard {
 		resetScore = true;
 	}
 
+	public void resetBombCount() {
+		resetBombCount = true;
+	}
+
 	public String[] getTime(long time) {
 		return new SimpleDateFormat("mm:ss:SSS").format(new Date(time)).split(":");
 	}
@@ -214,6 +241,7 @@ public class LayoutGame extends LayoutStanard {
 		return time >= minTime && time <= maxTime;
 	}
 
+	// Score Label Check
 	public long getScore() {
 		return score;
 	}
@@ -225,17 +253,7 @@ public class LayoutGame extends LayoutStanard {
 	public void updateScore(long score, long amount, Label label) {
 		score += amount;
 		label.setText("Score: " + this.score);
-
-		label.setTextColour(score > 25000 ? Colors.DARK_BLUE.getColor()
-				: score > 20000 ? Colors.CYAN.getColor()
-						: score > 15000 ? Colors.PURPLE.getColor()
-								: score > 10000 ? Colors.MAGENTA.getColor()
-										: score > 5000 ? Colors.DARK_RED.getColor()
-												: score > 2000 ? Colors.RED.getColor()
-														: score > 1500 ? Colors.ORANGE.getColor()
-																: score > 1000 ? Colors.YELLOW.getColor()
-																		: score > 500 ? Colors.GREEN.getColor()
-																				: Colors.LIGHT_GRAY.getColor());
+		label.setTextColour(getColorFromValue(score));
 
 		this.application.setTopScore(score);
 		this.score = this.application.getTopScore();
@@ -244,6 +262,43 @@ public class LayoutGame extends LayoutStanard {
 		this.labelScore = label;
 		this.application.markDirty();
 		this.application.save(Minecraft.getMinecraft().player.getEntityData());
+	}
+
+	// Bomb Count Label Check
+	public long getBombCount() {
+		return bombCount;
+	}
+
+	public void setBombCount(long bombCount) {
+		this.bombCount = bombCount;
+	}
+
+	public void updateBombCount(long bombCount, long amount, Label label) {
+		bombCount += amount;
+		label.setText("Bombs hit: " + this.bombCount);
+		label.setTextColour(getColorFromValue(bombCount));
+
+		this.application.setTopBombCount(bombCount);
+		this.bombCount = this.application.getTopBombCount();
+		// System.out.println(this.bombCount + " | " +
+		// this.application.getTopBombCount());
+		this.labelBombCount = label;
+		this.application.markDirty();
+		this.application.save(Minecraft.getMinecraft().player.getEntityData());
+	}
+
+	public Color getColorFromValue(long value) {
+		Colors color = value >= 25000 ? Colors.DARK_BLUE
+				: value >= 20000 ? Colors.CYAN
+						: value >= 15000 ? Colors.PURPLE
+								: value >= 10000 ? Colors.MAGENTA
+										: value >= 5000 ? Colors.DARK_RED
+												: value >= 2000 ? Colors.RED
+														: value >= 1500 ? Colors.ORANGE
+																: value >= 1000 ? Colors.YELLOW
+																		: value >= 500 ? Colors.GREEN
+																				: Colors.LIGHT_GRAY;
+		return color.getColor();
 	}
 
 	public void respawn(Sprite sprite, int width, int height) {

@@ -5,11 +5,11 @@ import com.mrcrayfish.device.api.app.Layout;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class LayoutStanard extends Layout {
+public abstract class LayoutStandard extends Layout {
 	
 	protected ApplicationGame application;
 
-	public LayoutStanard(int width, int height, ApplicationGame application) {
+	public LayoutStandard(int width, int height, ApplicationGame application) {
 		super(width, height);
 		this.application = application;
 	}

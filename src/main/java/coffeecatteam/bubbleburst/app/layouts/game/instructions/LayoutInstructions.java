@@ -13,12 +13,12 @@ import com.mrcrayfish.device.api.app.component.Text;
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
-import coffeecatteam.bubbleburst.app.layouts.LayoutStanard;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
-public class LayoutInstructions extends LayoutStanard {
+public class LayoutInstructions extends LayoutStandard {
 
 	private Button buttonBack;
 	private Label labelVersion;

@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import com.mrcrayfish.device.api.app.Layout;
 
 import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.app.layouts.LayoutStanard;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class LayoutGameScores extends LayoutStanard {
+public class LayoutGameScores extends LayoutStandard {
 
 	public LayoutGameScores(int width, int height, ApplicationGame application) {
 		super(width, height, application);

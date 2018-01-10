@@ -10,12 +10,12 @@ import com.mrcrayfish.device.api.app.component.Label;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.app.layouts.LayoutStanard;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
-public class LayoutGameOver extends LayoutStanard {
+public class LayoutGameOver extends LayoutStandard {
 
 	private Image background;
 
@@ -40,6 +40,7 @@ public class LayoutGameOver extends LayoutStanard {
 		this.buttonRetry.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
 				this.application.getLayoutGame().resetScore();
+				this.application.getLayoutGame().resetBombCount();
 				this.application.restoreDefaultLayout();
 			}
 		});
@@ -65,12 +66,32 @@ public class LayoutGameOver extends LayoutStanard {
 		this.labelScore.setTextColour(Color.ORANGE);
 		super.addComponent(this.labelScore);
 
-		this.labelScore = new Label("points!", this.width / 2+12,
+		this.labelScore = new Label("points!", this.width / 2+10,
 				this.height / 2+10);
 		this.labelScore.setAlignment(this.ALIGN_CENTER);
 		this.labelScore.setTextColour(Color.LIGHT_GRAY);
 		super.addComponent(this.labelScore);
 
+		this.labelScore = new Label("You also hit:", this.width / 2-25,
+				this.height / 2+20);
+		this.labelScore.setAlignment(this.ALIGN_CENTER);
+		this.labelScore.setTextColour(Color.LIGHT_GRAY);
+		this.labelScore.setScale(0.9D);
+		super.addComponent(this.labelScore);
+
+		this.labelScore = new Label(String.valueOf(this.application.getTopBombCount()), this.width / 2+5,
+				this.height / 2+20);
+		this.labelScore.setTextColour(Color.ORANGE);
+		super.addComponent(this.labelScore);
+
+		int bc_length = String.valueOf(this.application.getTopBombCount()).length();
+		this.labelScore = new Label("bombs!", this.width / 2+((bc_length > 1) ? 35 : 30),
+				this.height / 2+20);
+		this.labelScore.setAlignment(this.ALIGN_CENTER);
+		this.labelScore.setTextColour(Color.LIGHT_GRAY);
+		super.addComponent(this.labelScore);
+
+		// Game Version
 		this.labelVersion = new Label("Version: " + Reference.VERSION, 3, this.height - 10);
 		this.labelVersion.setTextColour(Color.LIGHT_GRAY);
 		this.labelVersion.setScale(0.95D);
