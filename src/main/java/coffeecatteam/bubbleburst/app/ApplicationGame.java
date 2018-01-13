@@ -4,19 +4,20 @@ import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Icons;
 import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Button;
+import com.mrcrayfish.device.api.app.component.Image;
 import com.mrcrayfish.device.api.app.component.Label;
 
 import coffeecatteam.bubbleburst.Reference;
+import coffeecatteam.bubbleburst.app.component.PlayerButton;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
+import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
-import coffeecatteam.bubbleburst.app.layouts.game.instructions.InstructionsLevelsScore;
-import coffeecatteam.bubbleburst.app.layouts.game.instructions.LayoutInstructions;
-import coffeecatteam.bubbleburst.app.layouts.scores.LayoutGameScores;
+import coffeecatteam.bubbleburst.app.layouts.game.LayoutGameScores;
+import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutLevelsScore;
+import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutInstructions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 
 public class ApplicationGame extends Application {
@@ -24,50 +25,57 @@ public class ApplicationGame extends Application {
 	// Start Menu
 	private Button buttonStart;
 	private Button buttonInstructions;
+	private Button buttonSettings;
 
 	private Label labelVersion;
 
 	// Layouts
 	private LayoutGame layoutGame;
 	private LayoutGameScores layoutGameScores;
-	
+
 	private LayoutInstructions layoutInstructions;
-	private InstructionsLevelsScore layoutLevelsScore;
+	private LayoutLevelsScore layoutLevelsScore;
 	
+	private LayoutSettings layoutSettings;
 
 	// Game
 	private long topScore;
 	private long topBombCount;
+	
+	// Settings
+	private int bombsAmount;
+	private int bubblesAmount;
 
 	public ApplicationGame() {
 		this.setDefaultWidth(95);
-		this.setDefaultHeight(65);
-	}
-
-	public long getTopScore() {
-		return topScore;
-	}
-
-	public void setTopScore(long topScore) {
-		this.topScore = topScore;
+		this.setDefaultHeight(85);
 	}
 	
-	public long getTopBombCount() {
-		return topBombCount;
+	public int getBombsAmount() {
+		return bombsAmount;
 	}
 	
-	public void setTopBombCount(long topBombCount) {
-		this.topBombCount = topBombCount;
+	public void setBombsAmount(int bombsAmount) {
+		this.bombsAmount = bombsAmount;
+	}
+	
+	public int getBubblesAmount() {
+		return bubblesAmount;
+	}
+	
+	public void setBubblesAmount(int bubblesAmount) {
+		this.bubblesAmount = bubblesAmount;
 	}
 
 	public void init() {
 		// Layouts
 		this.layoutGame = new LayoutGame(200, 100, this);
-		this.layoutGameScores = new LayoutGameScores(200,  100, this);
+		this.layoutGameScores = new LayoutGameScores(200, 100, this);
+
+		this.layoutInstructions = new LayoutInstructions(260, 125, this);
+		this.layoutLevelsScore = new LayoutLevelsScore(237, 115, this);
 		
-		this.layoutInstructions = new LayoutInstructions(260, 105, this);
-		this.layoutLevelsScore = new InstructionsLevelsScore(237, 115, this);
-		
+		this.layoutSettings = new LayoutSettings(260, 105, this);
 
 		// Start Menu
 		this.buttonStart = new Button(5, 5, "Start", Icons.PLAY);
@@ -78,7 +86,7 @@ public class ApplicationGame extends Application {
 		});
 		super.addComponent(this.buttonStart);
 
-		this.buttonInstructions = new Button(5, 30, "Instructions", Icons.INFO);
+		this.buttonInstructions = new Button(5, 50, "Instructions", Icons.INFO);
 		this.buttonInstructions.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
 				this.setCurrentLayout(this.layoutInstructions);
@@ -86,18 +94,39 @@ public class ApplicationGame extends Application {
 		});
 		super.addComponent(this.buttonInstructions);
 
-		this.labelVersion = new Label("Version: " + Reference.VERSION, 5, 53);
+		this.buttonSettings = new Button(5, 28, "Settings", Icons.WRENCH);
+		this.buttonSettings.setClickListener((mouseX, mouseY, mouseButton) -> {
+			if (mouseButton == 0) {
+				this.setCurrentLayout(this.layoutSettings);
+			}
+		});
+		super.addComponent(this.buttonSettings);
+
+		this.labelVersion = new Label("Version: " + this.getInfo().getVersion(), 5, 73);
 		super.addComponent(this.labelVersion);
 
-		Sprite fire_stick = new SpriteCursor(60, 5);
-		//fire_stick.setScale(1.05);
+		int fsp_x = 55;
+		int fsp_y = 5;
+		Sprite fire_stick = new SpriteCursor(fsp_x, fsp_y);
+		// fire_stick.setScale(1.05);
 		super.addComponent(fire_stick);
+		
+		// Player's face
+		ResourceLocation p_skin = Minecraft.getMinecraft().player.getLocationSkin();
+		int px = fsp_x+20;
+		int py = fsp_y;
+		int psize = 16;
+		
+		Image p_face = new Image(px, py, psize, psize, 32, 32, 32, 32, p_skin);
+		super.addComponent(p_face);
+		p_face = new Image(px-1, py-1, psize+2, psize+2, 160, 32, 32, 32, p_skin);
+		super.addComponent(p_face);
 	}
-	
+
 	public LayoutGame getLayoutGame() {
 		return layoutGame;
 	}
-	
+
 	public LayoutGameScores getLayoutGameScores() {
 		return layoutGameScores;
 	}
@@ -105,9 +134,13 @@ public class ApplicationGame extends Application {
 	public LayoutInstructions getLayoutInstructions() {
 		return layoutInstructions;
 	}
-	
-	public InstructionsLevelsScore getLayoutLevelsScore() {
+
+	public LayoutLevelsScore getLayoutLevelsScore() {
 		return layoutLevelsScore;
+	}
+	
+	public LayoutSettings getLayoutSettings() {
+		return layoutSettings;
 	}
 
 	public void setLayout(Layout layout) {
@@ -116,6 +149,23 @@ public class ApplicationGame extends Application {
 
 	public Layout getLayout() {
 		return this.getCurrentLayout();
+	}
+
+	// Game
+	public long getTopScore() {
+		return topScore;
+	}
+
+	public void setTopScore(long topScore) {
+		this.topScore = topScore;
+	}
+
+	public long getTopBombCount() {
+		return topBombCount;
+	}
+
+	public void setTopBombCount(long topBombCount) {
+		this.topBombCount = topBombCount;
 	}
 
 	@Override
@@ -127,16 +177,22 @@ public class ApplicationGame extends Application {
 	public void onTick() {
 		this.layoutGame.onTick();
 		this.layoutGameScores.onTick();
-		
+
 		this.layoutInstructions.onTick();
 		this.layoutLevelsScore.onTick();
 		
+		this.layoutSettings.onTick();
+
 		super.onTick();
 	}
 
 	@Override
 	public void onClose() {
 		this.setTopScore(this.layoutGame.getScore());
+		this.setTopBombCount(this.layoutGame.getBombCount());
+		
+		// Settings
+		this.setBombsAmount(this.layoutSettings.getBombsAmount());
 		super.onClose();
 	}
 
@@ -144,15 +200,17 @@ public class ApplicationGame extends Application {
 		this.topScore = nbt.getLong("topScore");
 		this.topBombCount = nbt.getLong("topBombCount");
 		
-		this.layoutGame.load(nbt);
-		this.layoutGameScores.load(nbt);
+		// Settings
+		this.bombsAmount = nbt.getInteger("bombsAmount");
+		this.bubblesAmount = nbt.getInteger("bubblesAmount");
 	}
 
 	public void save(NBTTagCompound nbt) {
 		nbt.setLong("topScore", this.getTopScore());
 		nbt.setLong("topBombCount", this.getTopBombCount());
 		
-		this.layoutGame.save(nbt);
-		this.layoutGameScores.save(nbt);
+		// Settings
+		nbt.setInteger("bombsAmount", this.bombsAmount);
+		nbt.setInteger("bubblesAmount", this.bubblesAmount);
 	}
 }

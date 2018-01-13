@@ -31,7 +31,7 @@ public abstract class Sprite extends Component {
 	protected boolean canTouch = true;
 	
 	protected int speed = 1;
-	protected double scale = 1;
+	protected float scale = 1;
 	
 	/**
 	 * Creates a sprite (animated image) with ResourceLocation sprite.
@@ -63,7 +63,7 @@ public abstract class Sprite extends Component {
 		this.textureHeight = textureHeight;
 	}
 	
-	public void setScale(double scale) {
+	public void setScale(float scale) {
 		this.scale = scale;
 	}
 	
@@ -141,7 +141,7 @@ public abstract class Sprite extends Component {
 				GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F,
 						color.getAlpha() / 255F);
 				
-				//GL11.glScaled(scale, scale, scale);
+				GlStateManager.scale(scale, scale, 1);
 				mc.getTextureManager().bindTexture(sprite);
 				
 				drawModalRectWithCustomSizedTexture(xPosition, yPosition, (float) ((currentProgress % 8) * 16*scale),

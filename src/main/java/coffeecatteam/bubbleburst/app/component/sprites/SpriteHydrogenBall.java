@@ -5,8 +5,11 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
+import com.mrcrayfish.device.core.Laptop;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
@@ -15,6 +18,7 @@ import coffeecatteam.bubbleburst.app.component.SpriteObj;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
 import coffeecatteam.bubbleburst.utill.SoundHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagList;

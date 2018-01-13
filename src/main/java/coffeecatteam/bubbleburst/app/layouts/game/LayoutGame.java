@@ -18,6 +18,7 @@ import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteHydrogenBall;
+import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.utill.Utills.Colors;
 import net.minecraft.client.Minecraft;
@@ -26,11 +27,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class LayoutGame extends LayoutStandard {
 
-	private Image background;
 	private Button buttonBack;
 
 	public Label labelVersion;
-	private boolean gameFinished = false;
 
 	// Timer
 	public Label labelTimer;
@@ -62,7 +61,7 @@ public class LayoutGame extends LayoutStandard {
 	private boolean resetBombCount = false;
 
 	public LayoutGame(int width, int height, ApplicationGame application) {
-		super(width, height, application);
+		super(width, height, application, true);
 	}
 
 	@Override
@@ -71,20 +70,8 @@ public class LayoutGame extends LayoutStandard {
 		this.hydrogen_bubbles = new ArrayList<>();
 		this.bombs = new ArrayList<>();
 
-		if (gameFinished) {
-			if (timer == maxGameTime) {
-				gameFinished = false;
-				timer = 0;
-			}
-		}
-
-		this.background = new Image(0, 0, this.width, this.height, this.width * 2 - 144, this.height / 2 - 49,
-				this.width + 56, this.height + 155,
-				new ResourceLocation(Reference.MODID, "textures/app/backgrounds/background.png"));
-		super.addComponent(this.background);
-
 		// Sprites
-		int bubblesAmount = 8; // default: 6
+		int bubblesAmount = this.application.getBubblesAmount();
 		for (int i = 0; i < bubblesAmount; i++) {
 			Sprite hydrogen_bubble = new SpriteHydrogenBall(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
 					randInt(1, 3));
@@ -92,7 +79,7 @@ public class LayoutGame extends LayoutStandard {
 			super.addComponent(this.hydrogen_bubbles.get(i));
 		}
 
-		int bombAmount = 3; // default: 3
+		int bombAmount = this.application.getBombsAmount();
 		for (int i = 0; i < bombAmount; i++) {
 			Sprite bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(2, 3));
 			this.bombs.add(bomb);
@@ -113,24 +100,24 @@ public class LayoutGame extends LayoutStandard {
 		super.addComponent(this.buttonBack);
 
 		// Score
-		this.labelVersion = new Label("Version: " + Reference.VERSION, 3, this.height - 10);
-		this.labelVersion.setTextColour(Color.LIGHT_GRAY);
+		this.labelVersion = new Label("Version: " + this.application.getInfo().getVersion(), 3, this.height - 10);
+		this.labelVersion.setTextColor(Color.LIGHT_GRAY);
 		this.labelVersion.setScale(0.95D);
 		super.addComponent(this.labelVersion);
 
 		this.labelTimer = new Label("Time left: " + getCurrentGameTime(), this.width / 2, 3);
-		this.labelTimer.setTextColour(Color.LIGHT_GRAY);
+		this.labelTimer.setTextColor(Color.LIGHT_GRAY);
 		this.labelTimer.setScale(0.95D);
 		this.labelTimer.setAlignment(this.ALIGN_CENTER);
 		super.addComponent(this.labelTimer);
 
 		this.labelScore = new Label("Score: " + this.score, 3, 3);
-		this.labelScore.setTextColour(Color.LIGHT_GRAY);
+		this.labelScore.setTextColor(Color.LIGHT_GRAY);
 		this.labelScore.setScale(0.95D);
 		super.addComponent(this.labelScore);
 
 		this.labelBombCount = new Label("Bombs hit: " + this.bombCount, 3, 15);
-		this.labelBombCount.setTextColour(Color.LIGHT_GRAY);
+		this.labelBombCount.setTextColor(Color.LIGHT_GRAY);
 		this.labelBombCount.setScale(0.95D);
 		super.addComponent(this.labelBombCount);
 
@@ -167,18 +154,16 @@ public class LayoutGame extends LayoutStandard {
 			this.bombs.forEach(bomb -> bomb.update(application, this, Minecraft.getMinecraft()));
 
 			// End Time
-			// System.out.println(getTime(newTime)[0] + " | " +
-			// getTime(newTime)[1] + " | " + getTime(newTime)[2]);
-			// System.out.println(newTime + " | " + minTime + " | " + maxTime);
 			if (newTime > maxTime) {
 				time = new Date().getTime();
 				timer++;
 			}
 			labelTimer.setText("Time left: " + getCurrentGameTime());
 
-			// System.out.println(timer);
 			if (timer >= maxGameTime) {
-				gameFinished = true;
+				timer = 0;
+				resetScore();
+				resetBombCount();
 				this.application.setLayout(new LayoutGameOver(200, 100, this.application));
 			}
 		} else {
@@ -200,14 +185,6 @@ public class LayoutGame extends LayoutStandard {
 			updateBombCount(this.bombCount, 0l, this.labelBombCount);
 		else
 			this.canBombCountUpdate = true;
-	}
-
-	@Override
-	public void load(NBTTagCompound nbt) {
-	}
-
-	@Override
-	public void save(NBTTagCompound nbt) {
 	}
 
 	/*
@@ -246,19 +223,13 @@ public class LayoutGame extends LayoutStandard {
 		return score;
 	}
 
-	public void setScore(long score) {
-		this.score = score;
-	}
-
 	public void updateScore(long score, long amount, Label label) {
 		score += amount;
 		label.setText("Score: " + this.score);
-		label.setTextColour(getColorFromValue(score));
+		label.setTextColor(getColorFromValue(score));
 
 		this.application.setTopScore(score);
 		this.score = this.application.getTopScore();
-		// System.out.println(this.score + " | " +
-		// this.application.getTopScore());
 		this.labelScore = label;
 		this.application.markDirty();
 		this.application.save(Minecraft.getMinecraft().player.getEntityData());
@@ -276,12 +247,10 @@ public class LayoutGame extends LayoutStandard {
 	public void updateBombCount(long bombCount, long amount, Label label) {
 		bombCount += amount;
 		label.setText("Bombs hit: " + this.bombCount);
-		label.setTextColour(getColorFromValue(bombCount));
+		label.setTextColor(getColorFromValue(bombCount));
 
 		this.application.setTopBombCount(bombCount);
 		this.bombCount = this.application.getTopBombCount();
-		// System.out.println(this.bombCount + " | " +
-		// this.application.getTopBombCount());
 		this.labelBombCount = label;
 		this.application.markDirty();
 		this.application.save(Minecraft.getMinecraft().player.getEntityData());
@@ -302,7 +271,7 @@ public class LayoutGame extends LayoutStandard {
 	}
 
 	public void respawn(Sprite sprite, int width, int height) {
-		int x = randInt(width - 40, width + 50);
+		int x = randInt(width - 40, width + 50); // width-40, width+160
 		sprite.xPosition = x; // 160; // x; // 250; // x;
 		sprite.yPosition = ((height / 2) - 4) + randInt(-10, 10);
 	}

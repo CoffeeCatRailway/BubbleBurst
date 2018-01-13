@@ -10,14 +10,14 @@ import com.mrcrayfish.device.api.app.component.Label;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
+import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 public class LayoutGameOver extends LayoutStandard {
-
-	private Image background;
 
 	private Button buttonRetry;
 
@@ -26,87 +26,70 @@ public class LayoutGameOver extends LayoutStandard {
 	private Label labelVersion;
 
 	public LayoutGameOver(int width, int height, ApplicationGame application) {
-		super(width, height, application);
+		super(width, height, application, true);
 	}
 
 	@Override
 	public void init(Layout layout) {
-		this.background = new Image(0, 0, this.width, this.height, this.width * 2 - 144, this.height / 2 - 49,
-				this.width + 56, this.height + 155,
-				new ResourceLocation(Reference.MODID, "textures/app/backgrounds/background.png"));
-		super.addComponent(this.background);
 
 		this.buttonRetry = new Button(3, 3, "Retry", Icons.HOME);
 		this.buttonRetry.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
-				this.application.getLayoutGame().resetScore();
-				this.application.getLayoutGame().resetBombCount();
+//				this.application.getLayoutGame().resetScore();
+//				this.application.getLayoutGame().resetBombCount();
 				this.application.restoreDefaultLayout();
 			}
 		});
 		super.addComponent(this.buttonRetry);
 
-		this.labelLogo = new Label("Bubble Burst", this.width / 2,
-				this.height / 2-20);
+		this.labelLogo = new Label("Bubble Burst", this.width / 2, this.height / 2 - 20);
 		this.labelLogo.setAlignment(this.ALIGN_CENTER);
-		this.labelLogo.setTextColour(Color.ORANGE);
+		this.labelLogo.setTextColor(Color.ORANGE);
 		this.labelLogo.setScale(2.0D);
 		super.addComponent(this.labelLogo);
 
-		this.labelScore = new Label(Minecraft.getMinecraft().player.getName() + ", you gained an amazing:", this.width / 2,
-				this.height / 2);
+		this.labelScore = new Label("", this.width / 2, this.height / 2);
 		this.labelScore.setAlignment(this.ALIGN_CENTER);
-		this.labelScore.setTextColour(Color.LIGHT_GRAY);
+		this.labelScore.setTextColor(Color.LIGHT_GRAY);
 		this.labelScore.setScale(0.9D);
+		this.labelScore.setText(Minecraft.getMinecraft().player.getName() + ", you gained an amazing:");
 		super.addComponent(this.labelScore);
 
-		this.labelScore = new Label(String.valueOf(this.application.getTopScore()), this.width / 2-10,
-				this.height / 2+10);
-		this.labelScore.setAlignment(this.ALIGN_RIGHT);
-		this.labelScore.setTextColour(Color.ORANGE);
-		super.addComponent(this.labelScore);
-
-		this.labelScore = new Label("points!", this.width / 2+10,
-				this.height / 2+10);
+		this.labelScore = new Label("", this.width / 2, this.height / 2 + 10);
 		this.labelScore.setAlignment(this.ALIGN_CENTER);
-		this.labelScore.setTextColour(Color.LIGHT_GRAY);
-		super.addComponent(this.labelScore);
-
-		this.labelScore = new Label("You also hit:", this.width / 2-25,
-				this.height / 2+20);
-		this.labelScore.setAlignment(this.ALIGN_CENTER);
-		this.labelScore.setTextColour(Color.LIGHT_GRAY);
+		this.labelScore.setTextColor(Color.LIGHT_GRAY);
 		this.labelScore.setScale(0.9D);
+		this.labelScore.setText("" + TextFormatting.GOLD + TextFormatting.BOLD
+				+ String.valueOf(this.application.getTopScore()) + TextFormatting.RESET + " points!");
 		super.addComponent(this.labelScore);
 
-		this.labelScore = new Label(String.valueOf(this.application.getTopBombCount()), this.width / 2+5,
-				this.height / 2+20);
-		this.labelScore.setTextColour(Color.ORANGE);
-		super.addComponent(this.labelScore);
-
-		int bc_length = String.valueOf(this.application.getTopBombCount()).length();
-		this.labelScore = new Label("bombs!", this.width / 2+((bc_length > 1) ? 35 : 30),
-				this.height / 2+20);
+		this.labelScore = new Label("", this.width / 2, this.height / 2 + 20);
 		this.labelScore.setAlignment(this.ALIGN_CENTER);
-		this.labelScore.setTextColour(Color.LIGHT_GRAY);
+		this.labelScore.setTextColor(Color.LIGHT_GRAY);
+		this.labelScore.setScale(0.9D);
+		this.labelScore.setText("You also hit: " + TextFormatting.GOLD + TextFormatting.BOLD
+				+ String.valueOf(this.application.getTopBombCount()) + TextFormatting.RESET + " bombs!");
 		super.addComponent(this.labelScore);
 
 		// Game Version
-		this.labelVersion = new Label("Version: " + Reference.VERSION, 3, this.height - 10);
-		this.labelVersion.setTextColour(Color.LIGHT_GRAY);
+		this.labelVersion = new Label("Version: " + this.application.getInfo().getVersion(), 3, this.height - 10);
+		this.labelVersion.setTextColor(Color.LIGHT_GRAY);
 		this.labelVersion.setScale(0.95D);
 		super.addComponent(this.labelVersion);
+
+		// Player's face
+		ResourceLocation p_skin = Minecraft.getMinecraft().player.getLocationSkin();
+		int px = 100 - 16;
+		int py = 3;
+		int psize = 24;
+
+		Image p_face = new Image(px, py, psize, psize, 32, 32, 32, 32, p_skin);
+		super.addComponent(p_face);
+		p_face = new Image(px - 1, py - 1, psize + 2, psize + 2, 160, 32, 32, 32, p_skin);
+		super.addComponent(p_face);
 	}
 
 	@Override
 	public void onTick() {
-	}
-
-	@Override
-	public void load(NBTTagCompound nbt) {
-	}
-
-	@Override
-	public void save(NBTTagCompound nbt) {
 	}
 }
