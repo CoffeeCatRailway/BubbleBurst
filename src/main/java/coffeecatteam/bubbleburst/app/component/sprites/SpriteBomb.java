@@ -19,8 +19,8 @@ public class SpriteBomb extends SpriteObj {
 	private static final ResourceLocation BOMB = new ResourceLocation(Reference.MODID, "textures/app/sprites/bomb.png");
 	private static final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
 	
-	public SpriteBomb(int x, int y, int scoreIncrease) {
-		super(x, y, 8, BOMB);
+	public SpriteBomb(int x, int y, int scoreIncrease, ApplicationGame application) {
+		super(x, y, 8, BOMB, application);
 		setScoreIncrease((long) scoreIncrease);
 		setLength(5);
 	}
@@ -32,7 +32,7 @@ public class SpriteBomb extends SpriteObj {
 
 		if (this.canMove())
 			this.yPosition += this.speed;
-		if (this.yPosition > layoutGame.height * 2)
+		if (this.yPosition > layoutGame.height * 2 + 10)
 			layoutGame.respawn(this, layoutGame.width, layoutGame.height);
 
 		// Check if cursor is touching a hydrogen bubble
@@ -41,17 +41,19 @@ public class SpriteBomb extends SpriteObj {
 				layoutGame.updateScore(layoutGame.getScore(), -getScoreIncrease(), layoutGame.labelScore);
 				layoutGame.updateBombCount(layoutGame.getBombCount(), 1, layoutGame.labelBombCount);
 
+				float v = this.application.getGameVolume()-0.3f;
+				setVolume(v < 0.0f ? 0.0f : v <= 0.3f ? v += ((0.1f+v)*0.5f) : v);
 				if (layoutGame.randInt(0, 10) < 2)
-					mc.player.playSound(SoundHandler.BOMB_1, 0.2f, (0.5f + new Random().nextFloat()) * 1.5f);
+					mc.player.playSound(SoundHandler.BOMB_1, getVolume(), getPitch());
 				else
-					mc.player.playSound(SoundHandler.BOMB_2, 0.2f, (0.5f + new Random().nextFloat()) * 1.5f);
+					mc.player.playSound(SoundHandler.BOMB_2,  getVolume(), getPitch());
 
 				this.setCanMove(false);
 			}
 		}
 
 		if (!this.canMove()) {
-			super.update(app, layout, mc);
+			super.update(app, layoutGame, mc);
 			if (pointer < getLength()) {
 				this.setSprite(EXPLOSION);
 			} else {

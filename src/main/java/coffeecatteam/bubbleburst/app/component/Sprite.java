@@ -3,6 +3,7 @@ package coffeecatteam.bubbleburst.app.component;
 import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Quaternion;
 
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Component;

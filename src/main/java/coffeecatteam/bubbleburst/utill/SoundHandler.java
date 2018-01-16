@@ -1,5 +1,8 @@
 package coffeecatteam.bubbleburst.utill;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import coffeecatteam.bubbleburst.Reference;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -21,10 +24,13 @@ public class SoundHandler {
 	}
 
 	@EventBusSubscriber(modid = Reference.MODID)
-	public static class RegistrationHandler {
+	public static class SoundRegistration {
+
+		private static SoundEvent[] sounds = { BUBBLE_POP, BOMB_1, BOMB_2 };
+
 		@SubscribeEvent
 		public static void registerSounds(final RegistryEvent.Register<SoundEvent> event) {
-			event.getRegistry().register(BUBBLE_POP);
+			event.getRegistry().registerAll(sounds);
 		}
 	}
 }

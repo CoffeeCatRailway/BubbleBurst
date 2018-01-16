@@ -34,7 +34,8 @@ public class LayoutInstructions extends LayoutStandard {
 	}
 
 	@Override
-	public void init(Layout layout) {
+	public void init() {
+		super.init();
 		this.buttonBack = new Button(3, 1, "Back", Icons.HOME);
 		this.buttonBack.setToolTip("Exit", "Exit to main menu.");
 		this.buttonBack.setClickListener((mouseX, mouseY, mouseButton) -> {

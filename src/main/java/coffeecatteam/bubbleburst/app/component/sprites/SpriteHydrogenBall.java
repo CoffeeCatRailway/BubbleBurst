@@ -31,8 +31,8 @@ public class SpriteHydrogenBall extends SpriteObj {
 	private static final ResourceLocation FIRE_BALL1 = new ResourceLocation(Reference.MODID, "textures/app/sprites/fire_ball1.png");
 	private static final ResourceLocation FIRE_BALL2 = new ResourceLocation(Reference.MODID, "textures/app/sprites/fire_ball2.png");
 
-	public SpriteHydrogenBall(int x, int y, int scoreIncrease) {
-		super(x, y, 8, HYDROGEN_BUBBLE);
+	public SpriteHydrogenBall(int x, int y, int scoreIncrease, ApplicationGame application) {
+		super(x, y, 8, HYDROGEN_BUBBLE, application);
 		setScoreIncrease((long) scoreIncrease);
 		setLength(10);
 	}
@@ -44,7 +44,7 @@ public class SpriteHydrogenBall extends SpriteObj {
 
 		if (this.canMove())
 			this.yPosition += this.speed;
-		if (this.yPosition > layoutGame.height * 2)
+		if (this.yPosition > layoutGame.height * 2 + 10)
 			layoutGame.respawn(this, layoutGame.width, layoutGame.height);
 
 		// Check if cursor is touching a hydrogen bubble
@@ -52,14 +52,14 @@ public class SpriteHydrogenBall extends SpriteObj {
 			if (!(this.getSprite().equals(FIRE_BALL1) || this.getSprite().equals(FIRE_BALL2))) {
 				layoutGame.updateScore(layoutGame.getScore(), getScoreIncrease(), layoutGame.labelScore);
 
-				mc.player.playSound(SoundHandler.BUBBLE_POP, 1.0f, (0.5f + new Random().nextFloat()) * 1.5f);
+				mc.player.playSound(SoundHandler.BUBBLE_POP, getVolume(), getPitch());
 
 				this.setCanMove(false);
 			}
 		}
 
 		if (!this.canMove()) {
-			super.update(app, layout, mc);
+			super.update(app, layoutGame, mc);
 			if (pointer < getLength()) {
 				if (layoutGame.randInt(0, 10) <= 2)
 					this.setSprite(FIRE_BALL2);

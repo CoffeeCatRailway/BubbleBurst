@@ -20,7 +20,8 @@ public class LayoutGameScores extends LayoutStandard {
 	}
 
 	@Override
-	public void init(Layout layout) {
+	public void init() {
+		super.init();
 		
 	}
 	

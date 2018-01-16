@@ -9,26 +9,20 @@ import java.util.List;
 import com.mrcrayfish.device.api.app.Icons;
 import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Button;
-import com.mrcrayfish.device.api.app.component.Image;
 import com.mrcrayfish.device.api.app.component.Label;
 
-import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteHydrogenBall;
-import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.utill.Utills.Colors;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 public class LayoutGame extends LayoutStandard {
 
 	private Button buttonBack;
-
 	public Label labelVersion;
 
 	// Timer
@@ -61,11 +55,12 @@ public class LayoutGame extends LayoutStandard {
 	private boolean resetBombCount = false;
 
 	public LayoutGame(int width, int height, ApplicationGame application) {
-		super(width, height, application, true);
+		super(width, height, application, true, BG_DEFAULT);
 	}
 
 	@Override
-	public void init(Layout layout) {
+	public void init() {
+		super.init();
 		time = new Date().getTime();
 		this.hydrogen_bubbles = new ArrayList<>();
 		this.bombs = new ArrayList<>();
@@ -74,14 +69,15 @@ public class LayoutGame extends LayoutStandard {
 		int bubblesAmount = this.application.getBubblesAmount();
 		for (int i = 0; i < bubblesAmount; i++) {
 			Sprite hydrogen_bubble = new SpriteHydrogenBall(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
-					randInt(1, 3));
+					randInt(1, 3), this.application);
 			this.hydrogen_bubbles.add(hydrogen_bubble);
 			super.addComponent(this.hydrogen_bubbles.get(i));
 		}
 
 		int bombAmount = this.application.getBombsAmount();
 		for (int i = 0; i < bombAmount; i++) {
-			Sprite bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(2, 3));
+			Sprite bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(1, 3),
+					this.application);
 			this.bombs.add(bomb);
 			super.addComponent(this.bombs.get(i));
 		}
@@ -91,7 +87,8 @@ public class LayoutGame extends LayoutStandard {
 		super.addComponent(this.cursor);
 
 		this.buttonBack = new Button(this.width - 45, 3, "Exit", Icons.HOME);
-		this.buttonBack.setToolTip("Exit", "Exiting the game will pause the current game.");
+		this.buttonBack.setToolTip("Exit", "Click or press E to exit to main menu."
+				+ "\nExiting the game will pause the current game.");
 		this.buttonBack.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
 				this.application.restoreDefaultLayout();
@@ -136,10 +133,11 @@ public class LayoutGame extends LayoutStandard {
 	}
 
 	@Override
-	public void handleMouseDrag(int mouseX, int mouseY, int mouseButton) {
-		int offset = 4;
-		this.cursor.xPosition = mouseX - offset;
-		this.cursor.yPosition = mouseY - offset;
+	public void handleKeyReleased(char character, int code) {
+		// System.out.println(String.valueOf(character) + " | " + code);
+		if (code == 18)
+			this.application.restoreDefaultLayout();
+		super.handleKeyReleased(character, code);
 	}
 
 	public void onTick() {
@@ -148,6 +146,7 @@ public class LayoutGame extends LayoutStandard {
 			long currentTime = new Date().getTime();
 			newTime = currentTime - time;
 
+			// Game Code
 			this.cursor.update(application, this, Minecraft.getMinecraft());
 			this.hydrogen_bubbles
 					.forEach(hydrogen_bubble -> hydrogen_bubble.update(application, this, Minecraft.getMinecraft()));
@@ -162,12 +161,11 @@ public class LayoutGame extends LayoutStandard {
 
 			if (timer >= maxGameTime) {
 				timer = 0;
-				resetScore();
-				resetBombCount();
 				this.application.setLayout(new LayoutGameOver(200, 100, this.application));
 			}
 		} else {
 			this.score = this.application.getTopScore();
+			this.bombCount = this.application.getTopBombCount();
 		}
 
 		// Score Check
@@ -204,10 +202,12 @@ public class LayoutGame extends LayoutStandard {
 
 	public void resetScore() {
 		resetScore = true;
+		this.application.setTopScore(0l);
 	}
 
 	public void resetBombCount() {
 		resetBombCount = true;
+		this.application.setTopBombCount(0l);
 	}
 
 	public String[] getTime(long time) {
@@ -271,7 +271,7 @@ public class LayoutGame extends LayoutStandard {
 	}
 
 	public void respawn(Sprite sprite, int width, int height) {
-		int x = randInt(width - 40, width + 50); // width-40, width+160
+		int x = randInt(width-40, width+50); // width-40, width+160 | width + 65, width + 155
 		sprite.xPosition = x; // 160; // x; // 250; // x;
 		sprite.yPosition = ((height / 2) - 4) + randInt(-10, 10);
 	}

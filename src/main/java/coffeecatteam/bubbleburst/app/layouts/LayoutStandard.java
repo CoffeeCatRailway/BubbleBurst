@@ -5,30 +5,29 @@ import com.mrcrayfish.device.api.app.component.Image;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class LayoutStandard extends Layout {
 
-	protected static final ResourceLocation BG_DEFAULT = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/default.png");
-	protected static final ResourceLocation BG_DESERT = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/desert.png");
+	protected static final ResourceLocation BG_DEFAULT = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/game/default.png");
+	protected static final ResourceLocation BG_DESERT = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/game/desert.png");
+	protected static final ResourceLocation BG_SETTINGS = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/settings.png");
+	
 	private ResourceLocation currentBackground;
 	private boolean hasBackground;
 	private Image background;
 
 	protected ApplicationGame application;
-	protected LayoutSettings settings;
 
 	public LayoutStandard(int width, int height, ApplicationGame application) {
-		this(width, height, application, false);
+		this(width, height, application, false, BG_DEFAULT);
 	}
 
-	public LayoutStandard(int width, int height, ApplicationGame application, boolean hasBackground) {
+	public LayoutStandard(int width, int height, ApplicationGame application, boolean hasBackground, ResourceLocation background) {
 		super(width, height);
 		this.application = application;
-		this.settings = this.application.getLayoutSettings();
 		this.hasBackground = hasBackground;
-		this.currentBackground = BG_DEFAULT;
+		this.currentBackground = background;
 	}
 	
 	protected void setBackground(ResourceLocation currentBackground) {
@@ -49,12 +48,7 @@ public abstract class LayoutStandard extends Layout {
 					256, 255, currentBackground);
 			super.addComponent(this.background);
 		}
-
-		init(this);
-		super.init();
 	}
-
-	public abstract void init(Layout layout);
 
 	public abstract void onTick();
 }

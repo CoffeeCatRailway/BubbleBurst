@@ -35,7 +35,8 @@ public class LayoutLevelsScore extends LayoutStandard {
 	}
 
 	@Override
-	public void init(Layout layout) {
+	public void init() {
+		super.init();
 		this.buttonBack = new Button(3, 3, "Back", Icons.ARROW_LEFT);
 		this.buttonBack.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {

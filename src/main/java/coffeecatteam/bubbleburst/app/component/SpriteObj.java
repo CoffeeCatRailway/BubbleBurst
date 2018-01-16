@@ -1,42 +1,73 @@
 package coffeecatteam.bubbleburst.app.component;
 
+import java.util.Random;
+
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 
+import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.utill.Utills;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 
 public class SpriteObj extends Sprite {
 
 	protected int pointer;
+	protected ApplicationGame application;
+	
+	// Sounds
+	private float volume;
+	private float pitch;
+	
+	// Score & Length
 	private int length;
 	private long scoreIncrease;
 
+	// Timer
 	private double elapsedTime;
 	private double currentTime;
 	private double lastTime;
 	private double fps;
 
-	public SpriteObj(int left, int top, int fps, ResourceLocation sprite) {
+	public SpriteObj(int left, int top, int fps, ResourceLocation sprite, ApplicationGame application) {
 		super(left, top, sprite);
 		pointer = 0;
+		this.application = application;
+		
+		this.volume = this.application.getGameVolume();
+		this.pitch = (0.5f + new Random().nextFloat()) * 1.5f;
+		
 		elapsedTime = 0;
 		currentTime = 0;
 		lastTime = Utills.getTime();
 		this.fps = 1.0 / (double) fps;
 	}
 	
-	protected long getScoreIncrease() {
-		return scoreIncrease;
+	// Sounds
+	protected void setVolume(float volume) {
+		this.volume = volume;
 	}
 	
+	protected float getVolume() {
+		return volume;
+	}
+	
+	protected void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+	
+	protected float getPitch() {
+		return pitch;
+	}
+	
+	// Score & Length
 	protected void setScoreIncrease(long scoreIncrease) {
 		this.scoreIncrease = scoreIncrease;
 	}
 	
-	protected int getLength() {
-		return length;
+	protected long getScoreIncrease() {
+		return scoreIncrease;
 	}
 	
 	/**
@@ -47,7 +78,11 @@ public class SpriteObj extends Sprite {
 	protected void setLength(int length) {
 		this.length = length;
 	}
-
+	
+	protected int getLength() {
+		return length;
+	}
+	
 	@Override
 	public void update(Application app, Layout layout, Minecraft mc) {
 		currentTime = Utills.getTime();

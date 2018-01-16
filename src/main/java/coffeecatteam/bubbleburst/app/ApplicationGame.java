@@ -8,7 +8,6 @@ import com.mrcrayfish.device.api.app.component.Image;
 import com.mrcrayfish.device.api.app.component.Label;
 
 import coffeecatteam.bubbleburst.Reference;
-import coffeecatteam.bubbleburst.app.component.PlayerButton;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
@@ -35,36 +34,48 @@ public class ApplicationGame extends Application {
 
 	private LayoutInstructions layoutInstructions;
 	private LayoutLevelsScore layoutLevelsScore;
-	
+
 	private LayoutSettings layoutSettings;
 
 	// Game
 	private long topScore;
 	private long topBombCount;
-	
+
+	public static boolean DEBUG = false;
+
 	// Settings
 	private int bombsAmount;
 	private int bubblesAmount;
+
+	private float gameVolume;
 
 	public ApplicationGame() {
 		this.setDefaultWidth(95);
 		this.setDefaultHeight(85);
 	}
-	
+
 	public int getBombsAmount() {
 		return bombsAmount;
 	}
-	
+
 	public void setBombsAmount(int bombsAmount) {
 		this.bombsAmount = bombsAmount;
 	}
-	
+
 	public int getBubblesAmount() {
 		return bubblesAmount;
 	}
-	
+
 	public void setBubblesAmount(int bubblesAmount) {
 		this.bubblesAmount = bubblesAmount;
+	}
+
+	public float getGameVolume() {
+		return gameVolume;
+	}
+
+	public void setGameVolume(float gameVolume) {
+		this.gameVolume = gameVolume;
 	}
 
 	public void init() {
@@ -74,13 +85,14 @@ public class ApplicationGame extends Application {
 
 		this.layoutInstructions = new LayoutInstructions(260, 125, this);
 		this.layoutLevelsScore = new LayoutLevelsScore(237, 115, this);
-		
+
 		this.layoutSettings = new LayoutSettings(260, 105, this);
 
 		// Start Menu
 		this.buttonStart = new Button(5, 5, "Start", Icons.PLAY);
 		this.buttonStart.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
+				this.layoutGame.init();
 				this.setCurrentLayout(this.layoutGame);
 			}
 		});
@@ -97,6 +109,7 @@ public class ApplicationGame extends Application {
 		this.buttonSettings = new Button(5, 28, "Settings", Icons.WRENCH);
 		this.buttonSettings.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
+				this.layoutSettings.init();
 				this.setCurrentLayout(this.layoutSettings);
 			}
 		});
@@ -110,19 +123,18 @@ public class ApplicationGame extends Application {
 		Sprite fire_stick = new SpriteCursor(fsp_x, fsp_y);
 		// fire_stick.setScale(1.05);
 		super.addComponent(fire_stick);
-		
+
 		// Player's face
 		ResourceLocation p_skin = Minecraft.getMinecraft().player.getLocationSkin();
-		int px = fsp_x+20;
+		int px = fsp_x + 20;
 		int py = fsp_y;
 		int psize = 16;
-		
+
 		Image p_face = new Image(px, py, psize, psize, 32, 32, 32, 32, p_skin);
 		super.addComponent(p_face);
-		p_face = new Image(px-1, py-1, psize+2, psize+2, 160, 32, 32, 32, p_skin);
+		p_face = new Image(px - 1, py - 1, psize + 2, psize + 2, 160, 32, 32, 32, p_skin);
 		super.addComponent(p_face);
 	}
-
 	public LayoutGame getLayoutGame() {
 		return layoutGame;
 	}
@@ -138,7 +150,7 @@ public class ApplicationGame extends Application {
 	public LayoutLevelsScore getLayoutLevelsScore() {
 		return layoutLevelsScore;
 	}
-	
+
 	public LayoutSettings getLayoutSettings() {
 		return layoutSettings;
 	}
@@ -180,7 +192,7 @@ public class ApplicationGame extends Application {
 
 		this.layoutInstructions.onTick();
 		this.layoutLevelsScore.onTick();
-		
+
 		this.layoutSettings.onTick();
 
 		super.onTick();
@@ -190,7 +202,7 @@ public class ApplicationGame extends Application {
 	public void onClose() {
 		this.setTopScore(this.layoutGame.getScore());
 		this.setTopBombCount(this.layoutGame.getBombCount());
-		
+
 		// Settings
 		this.setBombsAmount(this.layoutSettings.getBombsAmount());
 		super.onClose();
@@ -199,18 +211,22 @@ public class ApplicationGame extends Application {
 	public void load(NBTTagCompound nbt) {
 		this.topScore = nbt.getLong("topScore");
 		this.topBombCount = nbt.getLong("topBombCount");
-		
+
 		// Settings
 		this.bombsAmount = nbt.getInteger("bombsAmount");
 		this.bubblesAmount = nbt.getInteger("bubblesAmount");
+
+		this.gameVolume = nbt.getFloat("gameVolume");
 	}
 
 	public void save(NBTTagCompound nbt) {
 		nbt.setLong("topScore", this.getTopScore());
 		nbt.setLong("topBombCount", this.getTopBombCount());
-		
+
 		// Settings
 		nbt.setInteger("bombsAmount", this.bombsAmount);
 		nbt.setInteger("bubblesAmount", this.bubblesAmount);
+
+		nbt.setFloat("gameVolume", this.gameVolume);
 	}
 }
