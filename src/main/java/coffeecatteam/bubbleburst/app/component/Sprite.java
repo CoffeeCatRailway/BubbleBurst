@@ -19,7 +19,8 @@ import net.minecraft.util.ResourceLocation;
  */
 public abstract class Sprite extends Component {
 
-	private final int MAX_PROGRESS = 8 * (8 ^ 100);
+	private int MAX_PROGRESS_OFF = 100;
+	private int MAX_PROGRESS = 8 * (8 ^ MAX_PROGRESS_OFF);
 	private int currentProgress = 0;
 
 	private Color color = Color.WHITE;
@@ -62,6 +63,11 @@ public abstract class Sprite extends Component {
 		this.sprite = sprite;
 		this.textureWidth = textureWidth;
 		this.textureHeight = textureHeight;
+	}
+	
+	protected void setMaxProgressOff(int MAX_PROGRESS_OFF) {
+		this.MAX_PROGRESS_OFF = MAX_PROGRESS_OFF;
+		this.MAX_PROGRESS = 8 * (8 ^ this.MAX_PROGRESS_OFF);
 	}
 	
 	public void setScale(float scale) {

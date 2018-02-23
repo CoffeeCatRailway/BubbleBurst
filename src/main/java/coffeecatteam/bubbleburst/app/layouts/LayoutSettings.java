@@ -1,22 +1,32 @@
 package coffeecatteam.bubbleburst.app.layouts;
 
+import java.awt.Color;
 import java.text.DecimalFormat;
 
 import com.mrcrayfish.device.api.app.Icons;
 import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Button;
+import com.mrcrayfish.device.api.app.component.ComboBox;
+import com.mrcrayfish.device.api.app.component.ItemList;
 import com.mrcrayfish.device.api.app.component.Label;
 import com.mrcrayfish.device.api.app.component.Slider;
 import com.mrcrayfish.device.api.app.component.TextArea;
+import com.mrcrayfish.device.api.app.renderer.ListItemRenderer;
+import com.mrcrayfish.device.api.io.Drive;
+import com.mrcrayfish.device.api.utils.RenderUtil;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class LayoutSettings extends LayoutStandard {
+	
+	public static boolean hasDefaults = true;
 
 	private Button buttonBack;
 	private Label labelVersion;
@@ -24,14 +34,16 @@ public class LayoutSettings extends LayoutStandard {
 	// Bombs Amount
 	private Label labelBombsAmount;
 	private TextArea textAreaBombsAmount;
-	private int bombsAmount = 3; // default: 3
+	private int bombsDefault = 3; // default: 3
+	private int bombsAmount = bombsDefault;
 	private int maxBombsAmount = 10000; // default: 10000
 	private boolean textAreaBombsAmountCanUpdate = true;
 
 	// Bubbles Amount
 	private Label labelBubblesAmount;
 	private TextArea textAreaBubblesAmount;
-	private int bubblesAmount = 6; // default: 6
+	private int bubblesDefault = 6; // default: 6
+	private int bubblesAmount = bubblesDefault;
 	private int maxBubblesAmount = 10000; // default: 10000
 	private boolean textAreaBubblesAmountCanUpdate = true;
 	
@@ -47,6 +59,7 @@ public class LayoutSettings extends LayoutStandard {
 	@Override
 	public void init() {
 		super.init();
+		
 		this.buttonBack = new Button(5, 3, "Exit", Icons.HOME);
 		this.buttonBack.setToolTip("Exit", "Exit to main menu.");
 		this.buttonBack.setClickListener((mouseX, mouseY, mouseButton) -> {
@@ -142,15 +155,26 @@ public class LayoutSettings extends LayoutStandard {
 		this.application.setBubblesAmount(this.bubblesAmount);
 		this.application.setGameVolume(this.gameVolume);
 	}
+	
+	// Bombs
+	public boolean isBombsSetToDefault() {
+		return bombsAmount == bombsDefault;
+	}
 
 	public int getBombsAmount() {
 		return bombsAmount;
+	}
+	
+	// Bubbles
+	public boolean isBubblesSetToDefault() {
+		return bubblesAmount == bubblesDefault;
 	}
 
 	public int getBubblesAmount() {
 		return bubblesAmount;
 	}
 	
+	// Volume
 	public float getGameVolume() {
 		return Float.valueOf(new DecimalFormat("#.##").format(this.sliderGameVolume.getPercentage()));
 	}

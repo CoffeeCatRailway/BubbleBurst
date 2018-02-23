@@ -14,6 +14,7 @@ import com.mrcrayfish.device.api.app.component.Label;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
+import coffeecatteam.bubbleburst.app.component.sprites.SpriteCheese;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteHydrogenBall;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
@@ -29,7 +30,7 @@ public class LayoutGame extends LayoutStandard {
 	public Label labelTimer;
 	private static long time;
 
-	private int maxGameTime = 30 * 4; // 30 = 1 min
+	private int maxGameTime = 30; //30 * 4; // 30 = 1 min
 	private int timer = 0;
 
 	private long newTime;
@@ -38,6 +39,7 @@ public class LayoutGame extends LayoutStandard {
 
 	// Sprites
 	public Sprite cursor;
+	public SpriteCheese cheese;
 
 	public List<Sprite> hydrogen_bubbles;
 	public List<Sprite> bombs;
@@ -85,6 +87,9 @@ public class LayoutGame extends LayoutStandard {
 		// (this.width / 2) - 4, (this.height / 2) - 4
 		this.cursor = new SpriteCursor(5, this.height / 2);
 		super.addComponent(this.cursor);
+		
+		this.cheese = new SpriteCheese(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), this.application);
+		//super.addComponent(this.cheese);
 
 		this.buttonBack = new Button(this.width - 45, 3, "Exit", Icons.HOME);
 		this.buttonBack.setToolTip("Exit", "Click or press E to exit to main menu."
@@ -148,6 +153,7 @@ public class LayoutGame extends LayoutStandard {
 
 			// Game Code
 			this.cursor.update(application, this, Minecraft.getMinecraft());
+			this.cheese.update(application, this, Minecraft.getMinecraft());
 			this.hydrogen_bubbles
 					.forEach(hydrogen_bubble -> hydrogen_bubble.update(application, this, Minecraft.getMinecraft()));
 			this.bombs.forEach(bomb -> bomb.update(application, this, Minecraft.getMinecraft()));

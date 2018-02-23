@@ -1,18 +1,16 @@
 package coffeecatteam.bubbleburst.app.component.sprites;
 
-import java.util.Random;
-
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.SpriteObj;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
-import coffeecatteam.bubbleburst.utill.SoundHandler;
+import coffeecatteam.bubbleburst.utill.handlers.SoundHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 
 public class SpriteBomb extends SpriteObj {
 
@@ -43,10 +41,8 @@ public class SpriteBomb extends SpriteObj {
 
 				float v = this.application.getGameVolume()-0.3f;
 				setVolume(v < 0.0f ? 0.0f : v <= 0.3f ? v += ((0.1f+v)*0.5f) : v);
-				if (layoutGame.randInt(0, 10) < 2)
-					mc.player.playSound(SoundHandler.BOMB_1, getVolume(), getPitch());
-				else
-					mc.player.playSound(SoundHandler.BOMB_2,  getVolume(), getPitch());
+				SoundEvent sound = (layoutGame.randInt(0, 10) < 2) ? SoundHandler.BOMB_1 : SoundHandler.BOMB_2;
+				mc.player.playSound(sound, getVolume(), getPitch());
 
 				this.setCanMove(false);
 			}

@@ -1,9 +1,12 @@
 package coffeecatteam.bubbleburst;
 
 import com.mrcrayfish.device.api.ApplicationManager;
+import com.mrcrayfish.device.core.Laptop;
 
 import coffeecatteam.bubbleburst.app.ApplicationGame;
+import coffeecatteam.bubbleburst.app.ApplicationScoreBoard;
 import coffeecatteam.bubbleburst.init.ItemInit;
+import coffeecatteam.bubbleburst.utill.handlers.score.ScoreboardFileHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -22,14 +25,22 @@ public class BubbleBurst {
 
 	@EventHandler
 	public static void preInit(FMLPreInitializationEvent event) {
+		ScoreboardFileHandler.init();
+		
 		ItemInit.init();
 		//EntityInit.init();
 	}
 
 	@EventHandler
 	public static void init(FMLInitializationEvent event) {
+//		Laptop.addWallpaper(new ResourceLocation(Reference.MODID, "textures/gui/wallpaper_coffeecatrailway.png"));
+//		Laptop.addWallpaper(new ResourceLocation(Reference.MODID, "textures/app/backgrounds/game/default.png"));
+//		Laptop.addWallpaper(new ResourceLocation(Reference.MODID, "textures/app/backgrounds/game/desert.png"));
+		
 		ApplicationManager.registerApplication(new ResourceLocation(Reference.MODID, "bubble_game"),
 				ApplicationGame.class);
+		ApplicationManager.registerApplication(new ResourceLocation(Reference.MODID, "bubble_scoreboard"),
+				ApplicationScoreBoard.class);
 	}
 
 	private static class TabBubbleBurst extends CreativeTabs {

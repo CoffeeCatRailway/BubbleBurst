@@ -15,6 +15,9 @@ public class SpriteObj extends Sprite {
 
 	protected int pointer;
 	protected ApplicationGame application;
+
+	protected int WIDTH;
+	protected int HEIGHT;
 	
 	// Sounds
 	private float volume;
@@ -34,6 +37,9 @@ public class SpriteObj extends Sprite {
 		super(left, top, sprite);
 		pointer = 0;
 		this.application = application;
+		
+		this.WIDTH = this.application.getWidth();
+		this.HEIGHT = this.application.getHeight();
 		
 		this.volume = this.application.getGameVolume();
 		this.pitch = (0.5f + new Random().nextFloat()) * 1.5f;

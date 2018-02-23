@@ -1,28 +1,14 @@
 package coffeecatteam.bubbleburst.app.component.sprites;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.Random;
-
-import org.lwjgl.opengl.GL11;
-
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
-import com.mrcrayfish.device.core.Laptop;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.SpriteObj;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
-import coffeecatteam.bubbleburst.utill.SoundHandler;
+import coffeecatteam.bubbleburst.utill.handlers.SoundHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTSizeTracker;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 
 public class SpriteHydrogenBall extends SpriteObj {
@@ -61,10 +47,7 @@ public class SpriteHydrogenBall extends SpriteObj {
 		if (!this.canMove()) {
 			super.update(app, layoutGame, mc);
 			if (pointer < getLength()) {
-				if (layoutGame.randInt(0, 10) <= 2)
-					this.setSprite(FIRE_BALL2);
-				else
-					this.setSprite(FIRE_BALL1);
+				this.setSprite((layoutGame.randInt(0, 10) <= 2) ? FIRE_BALL2 : FIRE_BALL1);
 			} else {
 				if (pointer >= getLength())
 					pointer = 0;

@@ -1,5 +1,7 @@
 package coffeecatteam.bubbleburst.app.component.sprites;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.core.Laptop;
@@ -12,11 +14,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 public class SpriteCursor extends Sprite {
-	
-	private static final ResourceLocation FULL = new ResourceLocation(Reference.MODID, "textures/app/sprites/cursor/cursor_full.png");
-	private static final ResourceLocation HALF = new ResourceLocation(Reference.MODID, "textures/app/sprites/cursor/cursor_half.png");
-	private static final ResourceLocation EMPTY = new ResourceLocation(Reference.MODID, "textures/app/sprites/cursor/cursor_empty.png");
-	
+
+	private static final ResourceLocation FULL = new ResourceLocation(Reference.MODID,
+			"textures/app/sprites/cursor/cursor_full.png");
+	private static final ResourceLocation HALF = new ResourceLocation(Reference.MODID,
+			"textures/app/sprites/cursor/cursor_half.png");
+	private static final ResourceLocation EMPTY = new ResourceLocation(Reference.MODID,
+			"textures/app/sprites/cursor/cursor_empty.png");
+
 	private int mouseX;
 	private int mouseY;
 
@@ -30,20 +35,28 @@ public class SpriteCursor extends Sprite {
 		LayoutGame layoutGame = (LayoutGame) layout;
 		int gameTime = layoutGame.getCurrentGameTime();
 		int maxGameTime = layoutGame.getMaxGameTime();
-		
-		if (gameTime > maxGameTime/2) {
+
+		if (gameTime > maxGameTime / 2) {
 			this.setSprite(FULL);
-		} else if (gameTime <= maxGameTime/2 && gameTime > maxGameTime/4) {
+		} else if (gameTime <= maxGameTime / 2 && gameTime > maxGameTime / 4) {
 			this.setSprite(HALF);
-		} else if (gameTime <= maxGameTime/4) {
+		} else if (gameTime <= maxGameTime / 4) {
 			this.setSprite(EMPTY);
 		}
-		
+
 		// Cursor movement
 		int offset = 4;
+//		int slowDown = 0;
+//		if (layoutGame.cheese.CURSOR_SLOW_DOWN)
+//			slowDown = layoutGame.randInt(-5, 5);
+//		else
+//			slowDown = 0;
+//		mouseX = (slowDown < 0) ? mouseX + slowDown : mouseX - slowDown;
+//		mouseY = (slowDown < 0) ? mouseY + slowDown : mouseY - slowDown;
+
 		this.xPosition = mouseX - offset;
 		this.yPosition = mouseY - offset;
-		
+
 		if (this.xPosition < 110)
 			this.xPosition = 110;
 		else if (this.xPosition > 305)
@@ -53,7 +66,7 @@ public class SpriteCursor extends Sprite {
 		else if (this.yPosition > 160)
 			this.yPosition = 160;
 	}
-	
+
 	@Override
 	protected void render(Laptop laptop, Minecraft mc, int x, int y, int mouseX, int mouseY, boolean windowActive,
 			float partialTicks) {

@@ -7,14 +7,12 @@ import com.mrcrayfish.device.api.app.component.Button;
 import com.mrcrayfish.device.api.app.component.Image;
 import com.mrcrayfish.device.api.app.component.Label;
 
-import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
-import coffeecatteam.bubbleburst.app.layouts.game.LayoutGameScores;
-import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutLevelsScore;
 import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutInstructions;
+import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutLevelsScore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +28,6 @@ public class ApplicationGame extends Application {
 
 	// Layouts
 	private LayoutGame layoutGame;
-	private LayoutGameScores layoutGameScores;
 
 	private LayoutInstructions layoutInstructions;
 	private LayoutLevelsScore layoutLevelsScore;
@@ -81,7 +78,6 @@ public class ApplicationGame extends Application {
 	public void init() {
 		// Layouts
 		this.layoutGame = new LayoutGame(200, 100, this);
-		this.layoutGameScores = new LayoutGameScores(200, 100, this);
 
 		this.layoutInstructions = new LayoutInstructions(260, 125, this);
 		this.layoutLevelsScore = new LayoutLevelsScore(237, 115, this);
@@ -139,10 +135,6 @@ public class ApplicationGame extends Application {
 		return layoutGame;
 	}
 
-	public LayoutGameScores getLayoutGameScores() {
-		return layoutGameScores;
-	}
-
 	public LayoutInstructions getLayoutInstructions() {
 		return layoutInstructions;
 	}
@@ -188,7 +180,6 @@ public class ApplicationGame extends Application {
 	@Override
 	public void onTick() {
 		this.layoutGame.onTick();
-		this.layoutGameScores.onTick();
 
 		this.layoutInstructions.onTick();
 		this.layoutLevelsScore.onTick();
@@ -207,7 +198,7 @@ public class ApplicationGame extends Application {
 		this.setBombsAmount(this.layoutSettings.getBombsAmount());
 		super.onClose();
 	}
-
+	
 	public void load(NBTTagCompound nbt) {
 		this.topScore = nbt.getLong("topScore");
 		this.topBombCount = nbt.getLong("topBombCount");
