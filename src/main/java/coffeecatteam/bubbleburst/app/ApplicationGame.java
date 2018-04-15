@@ -38,8 +38,6 @@ public class ApplicationGame extends Application {
 	private long topScore;
 	private long topBombCount;
 
-	public static boolean DEBUG = false;
-
 	// Settings
 	private int bombsAmount;
 	private int bubblesAmount;

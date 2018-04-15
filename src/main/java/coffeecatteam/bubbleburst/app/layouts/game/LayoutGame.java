@@ -18,7 +18,7 @@ import coffeecatteam.bubbleburst.app.component.sprites.SpriteCheese;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteHydrogenBall;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
-import coffeecatteam.bubbleburst.utill.Utills.Colors;
+import coffeecatteam.bubbleburst.util.Utils.Colors;
 import net.minecraft.client.Minecraft;
 
 public class LayoutGame extends LayoutStandard {

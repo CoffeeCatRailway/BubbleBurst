@@ -1,4 +1,4 @@
-package coffeecatteam.bubbleburst.utill.handlers.score;
+package coffeecatteam.bubbleburst.util.handlers.score;
 
 public class PlayerScoreHolder {
 

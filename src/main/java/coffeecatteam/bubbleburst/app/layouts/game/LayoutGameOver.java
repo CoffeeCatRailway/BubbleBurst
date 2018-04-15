@@ -31,7 +31,7 @@ public class LayoutGameOver extends LayoutStandard {
 
 	@Override
 	public void init() {
-		this.buttonRetry = new Button(3, 3, "Retry1", Icons.HOME);
+		this.buttonRetry = new Button(3, 3, "Retry", Icons.HOME);
 		this.buttonRetry.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
 				this.application.getLayoutGame().resetScore();
@@ -48,8 +48,8 @@ public class LayoutGameOver extends LayoutStandard {
 				Dialog dialog;
 				
 				if (settings.isBombsSetToDefault() && settings.isBubblesSetToDefault()) {
-					dialog = new Dialog.Message("Saved score to global scoreboard!");
 					ApplicationScoreBoard.addScore(Minecraft.getMinecraft().player.getName(), this.application.getTopScore());
+					dialog = new Dialog.Message("Saved score to global scoreboard!");
 				} else {
 					dialog = new Dialog.Message("Can not save score, settings have been changed!");
 				}

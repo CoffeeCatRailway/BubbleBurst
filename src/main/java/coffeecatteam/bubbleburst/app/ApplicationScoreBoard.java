@@ -22,14 +22,14 @@ import com.mrcrayfish.device.api.app.component.Label;
 import com.mrcrayfish.device.api.app.component.Text;
 
 import coffeecatteam.bubbleburst.Reference;
-import coffeecatteam.bubbleburst.utill.handlers.score.PlayerScoreHolder;
-import coffeecatteam.bubbleburst.utill.handlers.score.ScoreboardFileHandler;
+import coffeecatteam.bubbleburst.util.handlers.score.PlayerScoreHolder;
+import coffeecatteam.bubbleburst.util.handlers.score.ScoreboardFileHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class ApplicationScoreBoard extends Application {
 
-	private static ScoreboardFileHandler sbf = new ScoreboardFileHandler();
+	private static ScoreboardFileHandler sbf;
 
 	public static final List<PlayerScoreHolder> SCORES = new ArrayList<>();
 	private static ItemList<String> listScores;
@@ -51,6 +51,9 @@ public class ApplicationScoreBoard extends Application {
 
 	@Override
 	public void init() {
+		ScoreboardFileHandler.init();
+		sbf = new ScoreboardFileHandler();
+		
 		this.background = new Image(0, 0, WIDTH, HEIGHT, 0, 0, 256, 255,
 				new ResourceLocation(Reference.MODID, "textures/app/backgrounds/scoreboard.png"));
 		super.addComponent(this.background);
@@ -64,7 +67,7 @@ public class ApplicationScoreBoard extends Application {
 		refreshScores();
 		super.addComponent(this.listScores);
 		
-		textScoreInfo = new Text("meow", 15, 100, WIDTH - 10);
+		textScoreInfo = new Text("meow", 25, 100, WIDTH - 10);
 		super.addComponent(textScoreInfo);
 
 		Button refreshScores = new Button(5, 100, Icons.RELOAD);
@@ -98,8 +101,8 @@ public class ApplicationScoreBoard extends Application {
 				PlayerScoreHolder psh = SCORES.get(i);
 				PlayerScoreHolder nextPsh = SCORES.get((i < SCORES.size()-1) ? i+1 : 0);
 				
-				System.out.println(psh.getPlayerName() + " | " + nextPsh.getPlayerName());
-				System.out.println(psh.getPlayerScore() + " | " + nextPsh.getPlayerScore());
+				//System.out.println(psh.getPlayerName() + " | " + nextPsh.getPlayerName());
+				//System.out.println(psh.getPlayerScore() + " | " + nextPsh.getPlayerScore());
 				if (psh.getPlayerName().equals(nextPsh.getPlayerName())) {
 					if (psh.getPlayerScore() == nextPsh.getPlayerScore()) {
 						SCORES.remove(psh);
@@ -126,7 +129,7 @@ public class ApplicationScoreBoard extends Application {
 		if (listScores.getItems().size() > 0)
 			listScores.getItems().clear();
 		
-		File scoreboard = sbf.getFile(sbf.GLOBAL_SCOREBOARD);
+		File scoreboard = sbf.getFile(sbf.GLOBAL_SCOREBOARD).getAbsoluteFile();
 		List<PlayerScoreHolder> scoresTmp = new ArrayList<>();
 		if (scoreboard.exists()) {
 			try {
@@ -171,14 +174,14 @@ public class ApplicationScoreBoard extends Application {
 	 */
 	public static void addScore(PlayerScoreHolder playerScore) {
 		SCORES.add(playerScore);
-		refreshScores();
 		saveScores();
 	}
 	
 	/**
-	 * Save scores to mods/bubble_burst/golbal.scoreboard file.
+	 * Save scores to saves/CURRENT_WORLD/bubbleburst_scoreboards/golbal.scoreboard file.
 	 */
 	public static void saveScores() {
+		refreshScores();
 		sortScores();
 		try {
 			sbf.createFile(sbf.GLOBAL_SCOREBOARD);

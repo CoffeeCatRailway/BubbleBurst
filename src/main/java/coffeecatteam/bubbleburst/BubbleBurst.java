@@ -1,12 +1,14 @@
 package coffeecatteam.bubbleburst;
 
+import org.apache.logging.log4j.Logger;
+
 import com.mrcrayfish.device.api.ApplicationManager;
-import com.mrcrayfish.device.core.Laptop;
 
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.ApplicationScoreBoard;
 import coffeecatteam.bubbleburst.init.ItemInit;
-import coffeecatteam.bubbleburst.utill.handlers.score.ScoreboardFileHandler;
+import coffeecatteam.bubbleburst.util.Utils;
+import coffeecatteam.bubbleburst.util.handlers.score.ScoreboardFileHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -20,13 +22,13 @@ public class BubbleBurst {
 
 	public static final CreativeTabs BUBBLEBURSTTAB = new TabBubbleBurst(Reference.MODID);
 
+	public static Logger logger = Utils.getLogger();
+
 	@Mod.Instance
 	public static BubbleBurst instance;
 
 	@EventHandler
 	public static void preInit(FMLPreInitializationEvent event) {
-		ScoreboardFileHandler.init();
-		
 		ItemInit.init();
 		//EntityInit.init();
 	}

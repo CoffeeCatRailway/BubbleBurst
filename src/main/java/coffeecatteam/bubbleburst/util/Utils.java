@@ -1,8 +1,29 @@
-package coffeecatteam.bubbleburst.utill;
+package coffeecatteam.bubbleburst.util;
 
 import java.awt.Color;
 
-public class Utills {
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import coffeecatteam.bubbleburst.Reference;
+
+public class Utils {
+
+	private static Logger logger;
+	
+	public static Logger getLogger() {
+		if (logger == null) {
+			logger = LogManager.getFormatterLogger(Reference.MODID.replace("b", "B"));
+		}
+		return logger;
+	}
+
+	public static Logger getLogger(String name) {
+		if (logger == null) {
+			logger = LogManager.getFormatterLogger(Reference.MODID.replace("b", "B")+"_"+name);
+		}
+		return logger;
+	}
 
 	public enum Colors {
 		LIGHT_GRAY(150, 150, 150), 	// Level: 1 | score < 500

@@ -1,4 +1,4 @@
-package coffeecatteam.bubbleburst.utill;
+package coffeecatteam.bubbleburst.util.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,12 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class SoundHandler {
 
-	public static SoundEvent BUBBLE_POP = registerSound(Reference.MODID + ":bubble_pop");
-	public static SoundEvent BOMB_1 = registerSound(Reference.MODID + ":bomb_1");
-	public static SoundEvent BOMB_2 = registerSound(Reference.MODID + ":bomb_2");
+	public static final SoundEvent BUBBLE_POP = registerSound(Reference.MODID + ":bubble_pop");
+	
+	public static final SoundEvent BOMB_1 = registerSound(Reference.MODID + ":bomb_1");
+	public static final SoundEvent BOMB_2 = registerSound(Reference.MODID + ":bomb_2");
+	
+	public static final SoundEvent SPLAT = registerSound(Reference.MODID + ":splat");
 
 	private static SoundEvent registerSound(String soundNameIn) {
 		ResourceLocation resource = new ResourceLocation(soundNameIn);
@@ -26,7 +29,7 @@ public class SoundHandler {
 	@EventBusSubscriber(modid = Reference.MODID)
 	public static class SoundRegistration {
 
-		private static SoundEvent[] sounds = { BUBBLE_POP, BOMB_1, BOMB_2 };
+		private static SoundEvent[] sounds = { BUBBLE_POP, BOMB_1, BOMB_2, SPLAT };
 
 		@SubscribeEvent
 		public static void registerSounds(final RegistryEvent.Register<SoundEvent> event) {
