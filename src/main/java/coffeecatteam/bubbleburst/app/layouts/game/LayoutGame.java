@@ -18,7 +18,7 @@ import coffeecatteam.bubbleburst.app.component.sprites.SpriteCheese;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteHydrogenBall;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
-import coffeecatteam.bubbleburst.utill.Utills.Colors;
+import coffeecatteam.bubbleburst.util.Utils.Colors;
 import net.minecraft.client.Minecraft;
 
 public class LayoutGame extends LayoutStandard {
@@ -57,12 +57,13 @@ public class LayoutGame extends LayoutStandard {
 	private boolean resetBombCount = false;
 
 	public LayoutGame(int width, int height, ApplicationGame application) {
-		super(width, height, application, true, BG_DEFAULT);
+		super(width, height, application, true, getRandomBackground());
 	}
 
 	@Override
 	public void init() {
 		super.init();
+		setBackground(getRandomBackground());
 		time = new Date().getTime();
 		this.hydrogen_bubbles = new ArrayList<>();
 		this.bombs = new ArrayList<>();
@@ -167,7 +168,7 @@ public class LayoutGame extends LayoutStandard {
 
 			if (timer >= maxGameTime) {
 				timer = 0;
-				this.application.setLayout(new LayoutGameOver(200, 100, this.application));
+				this.application.setLayout(new LayoutGameOver(200, 100, this.application, this.getBackground()));
 			}
 		} else {
 			this.score = this.application.getTopScore();

@@ -5,7 +5,7 @@
   "description": "Burst the bubbles!",
   "version": "2.3-pre1",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://minecraft.curseforge.com/projects/bubble-burst",
   "authorList": ["CoffeeCatTeam"],
   "logoFile": "logo.png",
   "credit": "MrCrayfish",

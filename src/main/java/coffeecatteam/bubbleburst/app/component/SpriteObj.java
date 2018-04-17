@@ -6,7 +6,7 @@ import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 
 import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.utill.Utills;
+import coffeecatteam.bubbleburst.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -46,7 +46,7 @@ public class SpriteObj extends Sprite {
 		
 		elapsedTime = 0;
 		currentTime = 0;
-		lastTime = Utills.getTime();
+		lastTime = Utils.getTime();
 		this.fps = 1.0 / (double) fps;
 	}
 	
@@ -91,7 +91,7 @@ public class SpriteObj extends Sprite {
 	
 	@Override
 	public void update(Application app, Layout layout, Minecraft mc) {
-		currentTime = Utills.getTime();
+		currentTime = Utils.getTime();
 		elapsedTime += currentTime - lastTime;
 
 		if (elapsedTime >= fps) {

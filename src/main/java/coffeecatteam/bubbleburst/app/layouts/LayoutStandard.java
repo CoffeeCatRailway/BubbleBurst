@@ -1,5 +1,9 @@
 package coffeecatteam.bubbleburst.app.layouts;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Image;
 
@@ -9,8 +13,9 @@ import net.minecraft.util.ResourceLocation;
 
 public abstract class LayoutStandard extends Layout {
 
-	protected static final ResourceLocation BG_DEFAULT = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/game/default.png");
-	protected static final ResourceLocation BG_DESERT = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/game/desert.png");
+	private static List<ResourceLocation> BACKGROUNDS = new ArrayList<ResourceLocation>();
+	protected static final ResourceLocation BG_DEFAULT = addBackground("game/default.png");
+	protected static final ResourceLocation BG_DESERT = addBackground("game/desert.png");
 	protected static final ResourceLocation BG_SETTINGS = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/settings.png");
 	
 	private ResourceLocation currentBackground;
@@ -28,6 +33,16 @@ public abstract class LayoutStandard extends Layout {
 		this.application = application;
 		this.hasBackground = hasBackground;
 		this.currentBackground = background;
+	}
+	
+	private static ResourceLocation addBackground(String background) {
+		ResourceLocation location = new ResourceLocation(Reference.MODID, "textures/app/backgrounds/" + background);
+		BACKGROUNDS.add(location);
+		return location;
+	}
+	
+	protected static ResourceLocation getRandomBackground() {
+		return BACKGROUNDS.get(new Random().nextInt(BACKGROUNDS.size()));
 	}
 	
 	protected void setBackground(ResourceLocation currentBackground) {

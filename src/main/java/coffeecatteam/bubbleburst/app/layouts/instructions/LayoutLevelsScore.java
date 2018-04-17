@@ -14,7 +14,7 @@ import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
-import coffeecatteam.bubbleburst.utill.Utills.Colors;
+import coffeecatteam.bubbleburst.util.Utils.Colors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -38,9 +38,12 @@ public class LayoutLevelsScore extends LayoutStandard {
 	public void init() {
 		super.init();
 		this.buttonBack = new Button(3, 3, "Back", Icons.ARROW_LEFT);
+		this.buttonBack.setToolTip("Clicky click!", "Left click to go back to the last page, right click to go back to main menu!");
 		this.buttonBack.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
 				this.application.setLayout(this.application.getLayoutInstructions());
+			} else if (mouseButton == 1) {
+				this.application.restoreDefaultLayout();
 			}
 		});
 		super.addComponent(this.buttonBack);

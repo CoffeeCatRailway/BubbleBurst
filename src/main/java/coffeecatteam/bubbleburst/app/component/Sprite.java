@@ -28,13 +28,13 @@ public abstract class Sprite extends Component {
 	private ResourceLocation sprite;
 	private int textureWidth;
 	private int textureHeight;
-	
+
 	protected boolean canMove = true;
 	protected boolean canTouch = true;
-	
+
 	protected int speed = 1;
 	protected float scale = 1;
-	
+
 	/**
 	 * Creates a sprite (animated image) with ResourceLocation sprite.
 	 * 
@@ -64,32 +64,32 @@ public abstract class Sprite extends Component {
 		this.textureWidth = textureWidth;
 		this.textureHeight = textureHeight;
 	}
-	
+
 	protected void setMaxProgressOff(int MAX_PROGRESS_OFF) {
 		this.MAX_PROGRESS_OFF = MAX_PROGRESS_OFF;
 		this.MAX_PROGRESS = 8 * (8 ^ this.MAX_PROGRESS_OFF);
 	}
-	
+
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
-	
+
 	public ResourceLocation getSprite() {
 		return sprite;
 	}
-	
+
 	public void setCanMove(boolean canMove) {
 		this.canMove = canMove;
 	}
-	
+
 	public boolean canMove() {
 		return canMove;
 	}
-	
+
 	public void setCanTouch(boolean canTouch) {
 		this.canTouch = canTouch;
 	}
-	
+
 	public boolean canTouch() {
 		return canTouch;
 	}
@@ -101,21 +101,23 @@ public abstract class Sprite extends Component {
 	 */
 	public boolean isTouching(Sprite sprite) {
 		int offset = this.textureWidth / 8;
-		return (this.xPosition + offset > sprite.xPosition && this.xPosition - offset < sprite.xPosition)&&(this.yPosition + offset > sprite.yPosition && this.yPosition - offset < sprite.yPosition)&&this.canTouch();
+		return (this.xPosition + offset > sprite.xPosition && this.xPosition - offset < sprite.xPosition)
+				&& (this.yPosition + offset > sprite.yPosition && this.yPosition - offset < sprite.yPosition)
+				&& this.canTouch();
 	}
-	
+
 	public void setTextureWidth(int textureWidth) {
 		this.textureWidth = textureWidth;
 	}
-	
+
 	public int getTextureWidth() {
 		return textureWidth;
 	}
-	
+
 	public void setTextureHeight(int textureHeight) {
 		this.textureHeight = textureHeight;
 	}
-	
+
 	public int getTextureHeight() {
 		return textureHeight;
 	}
@@ -136,28 +138,24 @@ public abstract class Sprite extends Component {
 		}
 		currentProgress++;
 	}
-	
+
 	public abstract void update(Application app, Layout layout, Minecraft mc);
 
 	@Override
 	protected void render(Laptop laptop, Minecraft mc, int x, int y, int mouseX, int mouseY, boolean windowActive,
 			float partialTicks) {
 		if (this.visible) {
-			GlStateManager.pushMatrix();
-			{
-				GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F,
-						color.getAlpha() / 255F);
-				
-				GlStateManager.scale(scale, scale, 1);
-				mc.getTextureManager().bindTexture(sprite);
-				
-				drawModalRectWithCustomSizedTexture(xPosition, yPosition, (float) ((currentProgress % 8) * 16*scale),
-						(float) (16 + 16 * (int) Math.floor((double) currentProgress / 8)*scale), 16, 16,
-						textureWidth, textureHeight);
+			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F,
+					color.getAlpha() / 255F);
 
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			}
-			GlStateManager.popMatrix();
+			GlStateManager.scale(scale, scale, 1);
+			mc.getTextureManager().bindTexture(sprite);
+
+			drawModalRectWithCustomSizedTexture(xPosition, yPosition, (float) ((currentProgress % 8) * 16 * scale),
+					(float) (16 + 16 * (int) Math.floor((double) currentProgress / 8) * scale), 16, 16, textureWidth,
+					textureHeight);
+
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		}
 	}
 }

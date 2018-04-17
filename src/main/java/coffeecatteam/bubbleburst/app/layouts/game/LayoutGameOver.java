@@ -8,8 +8,8 @@ import com.mrcrayfish.device.api.app.component.Button;
 import com.mrcrayfish.device.api.app.component.Image;
 import com.mrcrayfish.device.api.app.component.Label;
 
+import coffeecatteam.bubbleburst.BubbleBurst;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.app.ApplicationScoreBoard;
 import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import net.minecraft.client.Minecraft;
@@ -19,19 +19,19 @@ import net.minecraft.util.text.TextFormatting;
 public class LayoutGameOver extends LayoutStandard {
 	
 	private Button buttonRetry;
-	private Button buttonSaveScore;
 
 	private Label labelLogo;
 	private Label labelScore;
 	private Label labelVersion;
 
-	public LayoutGameOver(int width, int height, ApplicationGame application) {
-		super(width, height, application, true, BG_DEFAULT);
+	public LayoutGameOver(int width, int height, ApplicationGame application, ResourceLocation background) {
+		super(width, height, application, true, background);
 	}
 
 	@Override
 	public void init() {
-		this.buttonRetry = new Button(3, 3, "Retry1", Icons.HOME);
+		super.init();
+		this.buttonRetry = new Button(3, 3, "Retry", Icons.HOME);
 		this.buttonRetry.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
 				this.application.getLayoutGame().resetScore();
@@ -40,23 +40,6 @@ public class LayoutGameOver extends LayoutStandard {
 			}
 		});
 		super.addComponent(this.buttonRetry);
-
-		this.buttonSaveScore = new Button(140, 3, "Score", Icons.SAVE);
-		this.buttonSaveScore.setClickListener((mouseX, mouseY, mouseButton) -> {
-			if (mouseButton == 0) {
-				LayoutSettings settings = application.getLayoutSettings();
-				Dialog dialog;
-				
-				if (settings.isBombsSetToDefault() && settings.isBubblesSetToDefault()) {
-					dialog = new Dialog.Message("Saved score to global scoreboard!");
-					ApplicationScoreBoard.addScore(Minecraft.getMinecraft().player.getName(), this.application.getTopScore());
-				} else {
-					dialog = new Dialog.Message("Can not save score, settings have been changed!");
-				}
-				application.openDialog(dialog);
-			}
-		});
-		super.addComponent(this.buttonSaveScore);
 
 		this.labelLogo = new Label("Bubble Burst", this.width / 2, this.height / 2 - 20);
 		this.labelLogo.setAlignment(this.ALIGN_CENTER);

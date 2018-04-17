@@ -9,6 +9,7 @@ import com.mrcrayfish.device.api.app.component.Label;
 
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
+import coffeecatteam.bubbleburst.app.layouts.LayoutIntroCutScene;
 import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
 import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutInstructions;
@@ -27,6 +28,7 @@ public class ApplicationGame extends Application {
 	private Label labelVersion;
 
 	// Layouts
+	private LayoutIntroCutScene layoutIntroCutScene;
 	private LayoutGame layoutGame;
 
 	private LayoutInstructions layoutInstructions;
@@ -37,8 +39,6 @@ public class ApplicationGame extends Application {
 	// Game
 	private long topScore;
 	private long topBombCount;
-
-	public static boolean DEBUG = false;
 
 	// Settings
 	private int bombsAmount;
@@ -77,7 +77,10 @@ public class ApplicationGame extends Application {
 
 	public void init() {
 		// Layouts
-		this.layoutGame = new LayoutGame(200, 100, this);
+		int gameLayoutsWidth = 362;
+		int gameLayoutsHeiht = 165;
+		this.layoutIntroCutScene = new LayoutIntroCutScene(gameLayoutsWidth, gameLayoutsHeiht, this);
+		this.layoutGame = new LayoutGame(gameLayoutsWidth, gameLayoutsHeiht, this);
 
 		this.layoutInstructions = new LayoutInstructions(260, 125, this);
 		this.layoutLevelsScore = new LayoutLevelsScore(237, 115, this);
@@ -88,8 +91,8 @@ public class ApplicationGame extends Application {
 		this.buttonStart = new Button(5, 5, "Start", Icons.PLAY);
 		this.buttonStart.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
-				this.layoutGame.init();
-				this.setCurrentLayout(this.layoutGame);
+				this.layoutIntroCutScene.init();
+				this.setCurrentLayout(this.layoutIntroCutScene);
 			}
 		});
 		super.addComponent(this.buttonStart);
@@ -131,6 +134,11 @@ public class ApplicationGame extends Application {
 		p_face = new Image(px - 1, py - 1, psize + 2, psize + 2, 160, 32, 32, 32, p_skin);
 		super.addComponent(p_face);
 	}
+	
+	public LayoutIntroCutScene getLayoutIntroCutScene() {
+		return layoutIntroCutScene;
+	}
+
 	public LayoutGame getLayoutGame() {
 		return layoutGame;
 	}
@@ -179,6 +187,7 @@ public class ApplicationGame extends Application {
 
 	@Override
 	public void onTick() {
+		this.layoutIntroCutScene.onTick();
 		this.layoutGame.onTick();
 
 		this.layoutInstructions.onTick();
@@ -198,7 +207,7 @@ public class ApplicationGame extends Application {
 		this.setBombsAmount(this.layoutSettings.getBombsAmount());
 		super.onClose();
 	}
-	
+
 	public void load(NBTTagCompound nbt) {
 		this.topScore = nbt.getLong("topScore");
 		this.topBombCount = nbt.getLong("topBombCount");

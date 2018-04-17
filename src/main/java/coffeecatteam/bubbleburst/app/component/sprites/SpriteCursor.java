@@ -46,14 +46,10 @@ public class SpriteCursor extends Sprite {
 
 		// Cursor movement
 		int offset = 4;
-//		int slowDown = 0;
-//		if (layoutGame.cheese.CURSOR_SLOW_DOWN)
-//			slowDown = layoutGame.randInt(-5, 5);
-//		else
-//			slowDown = 0;
-//		mouseX = (slowDown < 0) ? mouseX + slowDown : mouseX - slowDown;
-//		mouseY = (slowDown < 0) ? mouseY + slowDown : mouseY - slowDown;
 
+//		this.mouseX = (this.mouseX >= layoutGame.width) ? layoutGame.width : this.mouseX;
+//		this.mouseY = (this.mouseY >= layoutGame.height) ? layoutGame.height : this.mouseY;
+		
 		this.xPosition = mouseX - offset;
 		this.yPosition = mouseY - offset;
 

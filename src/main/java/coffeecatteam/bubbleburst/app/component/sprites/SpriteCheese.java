@@ -7,7 +7,7 @@ import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.SpriteObj;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
-import coffeecatteam.bubbleburst.utill.handlers.SoundHandler;
+import coffeecatteam.bubbleburst.util.handlers.SoundHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
