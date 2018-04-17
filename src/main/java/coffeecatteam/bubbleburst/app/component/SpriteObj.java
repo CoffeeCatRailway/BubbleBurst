@@ -5,6 +5,7 @@ import java.util.Random;
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 
+import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -48,6 +49,19 @@ public class SpriteObj extends Sprite {
 		currentTime = 0;
 		lastTime = Utils.getTime();
 		this.fps = 1.0 / (double) fps;
+	}
+	
+	// Anims
+	public static ResourceLocation[] getAnims(String sprite, int amount) {
+		ResourceLocation[] locations = new ResourceLocation[amount];
+		for (int i = 0; i < amount; i++) {
+			locations[i] = new ResourceLocation(Reference.MODID, "textures/app/sprites/" + sprite + "/anim" + String.valueOf(i) + ".png");
+		}
+		return locations;
+	}
+	
+	protected static ResourceLocation getRandomAnim(ResourceLocation[] anims) {
+		return anims[new Random().nextInt(anims.length)];
 	}
 	
 	// Sounds

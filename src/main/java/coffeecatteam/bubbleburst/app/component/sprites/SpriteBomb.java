@@ -14,11 +14,11 @@ import net.minecraft.util.SoundEvent;
 
 public class SpriteBomb extends SpriteObj {
 
-	private static final ResourceLocation BOMB = new ResourceLocation(Reference.MODID, "textures/app/sprites/bomb.png");
-	private static final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
+	public static final ResourceLocation[] BOMB = getAnims("bomb", 2);
+	public static final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
 	
 	public SpriteBomb(int x, int y, int scoreIncrease, ApplicationGame application) {
-		super(x, y, 8, BOMB, application);
+		super(x, y, 8, getRandomAnim(BOMB), application);
 		setScoreIncrease((long) scoreIncrease);
 		setLength(5);
 	}
@@ -55,7 +55,7 @@ public class SpriteBomb extends SpriteObj {
 			} else {
 				if (pointer >= getLength())
 					pointer = 0;
-				this.setSprite(BOMB);
+				this.setSprite(getRandomAnim(BOMB));
 				this.setCanMove(true);
 				layoutGame.respawn(this, layoutGame.width, layoutGame.height);
 			}

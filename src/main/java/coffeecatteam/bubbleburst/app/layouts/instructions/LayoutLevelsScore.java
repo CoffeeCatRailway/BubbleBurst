@@ -2,6 +2,7 @@ package coffeecatteam.bubbleburst.app.layouts.instructions;
 
 import java.awt.Color;
 import java.util.Date;
+import java.util.Random;
 
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Icons;
@@ -13,6 +14,8 @@ import com.mrcrayfish.device.api.app.component.Text;
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
+import coffeecatteam.bubbleburst.app.component.SpriteObj;
+import coffeecatteam.bubbleburst.app.component.sprites.SpriteBubble;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.util.Utils.Colors;
 import net.minecraft.client.Minecraft;
@@ -48,15 +51,10 @@ public class LayoutLevelsScore extends LayoutStandard {
 		});
 		super.addComponent(this.buttonBack);
 
-		this.hydrogen_bubble = new Sprite(50, 5,
-				new ResourceLocation(Reference.MODID, "textures/app/sprites/hydrogen_bubble.png")) {
-
-			private final ResourceLocation HYDROGEN_BUBBLE = new ResourceLocation(Reference.MODID,
-					"textures/app/sprites/hydrogen_bubble.png");
-			private final ResourceLocation FIRE_BALL1 = new ResourceLocation(Reference.MODID,
-					"textures/app/sprites/fire_ball1.png");
-			private final ResourceLocation FIRE_BALL2 = new ResourceLocation(Reference.MODID,
-					"textures/app/sprites/fire_ball2.png");
+		ResourceLocation[] HYDROGEN_BUBBLE = SpriteBubble.HYDROGEN_BUBBLE;
+		this.hydrogen_bubble = new Sprite(50, 5, HYDROGEN_BUBBLE[0]) {
+			
+			private final ResourceLocation[] FIRE_BALL = SpriteBubble.FIRE_BALL;
 
 			private long time = new Date().getTime();
 
@@ -69,12 +67,9 @@ public class LayoutLevelsScore extends LayoutStandard {
 				long maxTime = 1000 * 3;
 
 				if (newTime >= minTime && newTime <= maxTime) {
-					if (randInt(0, 10) <= 2)
-						this.setSprite(FIRE_BALL2);
-					else
-						this.setSprite(FIRE_BALL1);
+					this.setSprite(FIRE_BALL[0]);
 				} else {
-					this.setSprite(HYDROGEN_BUBBLE);
+					this.setSprite(HYDROGEN_BUBBLE[0]);
 				}
 
 				if (newTime > maxTime) {

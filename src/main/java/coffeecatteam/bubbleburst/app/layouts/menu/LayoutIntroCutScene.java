@@ -1,4 +1,4 @@
-package coffeecatteam.bubbleburst.app.layouts;
+package coffeecatteam.bubbleburst.app.layouts.menu;
 
 import java.awt.Color;
 import java.util.Date;
@@ -11,6 +11,7 @@ import com.mrcrayfish.device.core.Laptop;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.util.handlers.SoundHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -44,8 +45,10 @@ public class LayoutIntroCutScene extends LayoutStandard {
 		super.init();
 
 		this.title = new Image(this.width, this.height / 8, titleWidth, 60, 0, 0, 259, 250, new ResourceLocation(Reference.MODID, "textures/app/intro_cut_scene_title.png"));
-		this.title.setBorderThickness(2);
-		this.title.setBorderVisible(true);
+		if (MrCrayfishDeviceMod.DEVELOPER_MODE) {
+			this.title.setBorderThickness(2);
+			this.title.setBorderVisible(true);
+		}
 		super.addComponent(this.title);
 		this.madeBy = new Label("Made By: CoffeeCatRailway", this.width / 2 - 20, this.height);
 		this.madeBy.setTextColor(Color.ORANGE);
@@ -61,40 +64,34 @@ public class LayoutIntroCutScene extends LayoutStandard {
 	}
 	
 	@Override
-	public void render(Laptop laptop, Minecraft mc, int x, int y, int mouseX, int mouseY, boolean windowActive,
-			float partialTicks) {
-		super.render(laptop, mc, x, y, mouseX, mouseY, windowActive, partialTicks);
-		
-		// Sound and Volume
-		float v = this.application.getGameVolume() - 0.3f;
-		this.application.setGameVolume(v < 0.0f ? 0.0f : v <= 0.3f ? v += ((0.1f + v) * 0.5f) : v);
-		SoundEvent sound = (this.application.getLayoutGame().randInt(0, 10) < 2) ? SoundHandler.BOMB_1 : SoundHandler.BOMB_2;
-		float pitch = (0.5f + new Random().nextFloat()) * 1.5f;
-
-		// Update Features
-		if (this.title.xPosition >= this.width / 2 - (this.titleWidth / 2)) {
-			int moveSpeed = 7;
-//			if (this.title.xPosition <= this.width / 2) {
-//				moveSpeed = 4;
-//				if (this.title.xPosition < this.width / 3 + 2)
-//					Minecraft.getMinecraft().player.playSound(sound, this.application.getGameVolume(), pitch);
-//			}
-			this.title.xPosition -= moveSpeed;
-		}
-		if (this.madeBy.yPosition > (this.height / 2) + 35 && this.title.xPosition <= this.width / 2) {
-			int moveSpeed = 7;
-			if (this.madeBy.yPosition <= (this.height / 2) + 55)
-				moveSpeed = 4;
-			this.madeBy.yPosition -= moveSpeed;
-		}
-	}
-
-	@Override
 	public void onTick() {
 		if (this.application.getCurrentLayout() == this) {
 			// Time
 			long currentTime = new Date().getTime();
 			newTime = currentTime - time;
+
+			// Sound and Volume
+			float v = this.application.getGameVolume() - 0.3f;
+			this.application.setGameVolume(v < 0.0f ? 0.0f : v <= 0.3f ? v += ((0.1f + v) * 0.5f) : v);
+			SoundEvent sound = (this.application.getLayoutGame().randInt(0, 10) < 2) ? SoundHandler.BOMB_1 : SoundHandler.BOMB_2;
+			float pitch = (0.5f + new Random().nextFloat()) * 1.5f;
+
+			// Update Features
+			if (this.title.xPosition >= this.width / 2 - (this.titleWidth / 2)) {
+				int moveSpeed = 7;
+//				if (this.title.xPosition <= this.width / 2) {
+//					moveSpeed = 4;
+//					if (this.title.xPosition < this.width / 3 + 2)
+//						Minecraft.getMinecraft().player.playSound(sound, this.application.getGameVolume(), pitch);
+//				}
+				this.title.xPosition -= moveSpeed;
+			}
+			if (this.madeBy.yPosition > (this.height / 2) + 35 && this.title.xPosition <= this.width / 2) {
+				int moveSpeed = 7;
+				if (this.madeBy.yPosition <= (this.height / 2) + 55)
+					moveSpeed = 4;
+				this.madeBy.yPosition -= moveSpeed;
+			}
 
 			// End Time
 			if (newTime > maxTime) {

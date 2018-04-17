@@ -1,4 +1,4 @@
-package coffeecatteam.bubbleburst.app.layouts;
+package coffeecatteam.bubbleburst.app.layouts.menu;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -17,6 +17,7 @@ import com.mrcrayfish.device.api.utils.RenderUtil;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;

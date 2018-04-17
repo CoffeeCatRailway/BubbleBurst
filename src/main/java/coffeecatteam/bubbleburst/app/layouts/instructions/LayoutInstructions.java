@@ -13,9 +13,9 @@ import com.mrcrayfish.device.api.app.component.Text;
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
+import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
@@ -49,12 +49,10 @@ public class LayoutInstructions extends LayoutStandard {
 		this.labelVersion.setScale(1d);
 		super.addComponent(this.labelVersion);
 
-		this.bomb = new Sprite(50, 3, new ResourceLocation(Reference.MODID, "textures/app/sprites/bomb.png")) {
+		ResourceLocation[] BOMB = SpriteBomb.BOMB;
+		this.bomb = new Sprite(50, 3, BOMB[0]) {
 
-			private final ResourceLocation BOMB = new ResourceLocation(Reference.MODID,
-					"textures/app/sprites/bomb.png");
-			private final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID,
-					"textures/app/sprites/explosion.png");
+			private final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
 
 			private long time = new Date().getTime();
 
@@ -69,7 +67,7 @@ public class LayoutInstructions extends LayoutStandard {
 				if (newTime >= minTime && newTime <= maxTime) {
 					this.setSprite(EXPLOSION);
 				} else {
-					this.setSprite(BOMB);
+					this.setSprite(BOMB[0]);
 				}
 
 				if (newTime > maxTime) {

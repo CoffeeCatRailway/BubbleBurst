@@ -1,5 +1,7 @@
 package coffeecatteam.bubbleburst.app.component.sprites;
 
+import java.util.Random;
+
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 
@@ -11,14 +13,13 @@ import coffeecatteam.bubbleburst.util.handlers.SoundHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
-public class SpriteHydrogenBall extends SpriteObj {
+public class SpriteBubble extends SpriteObj {
 
-	private static final ResourceLocation HYDROGEN_BUBBLE = new ResourceLocation(Reference.MODID, "textures/app/sprites/hydrogen_bubble.png");
-	private static final ResourceLocation FIRE_BALL1 = new ResourceLocation(Reference.MODID, "textures/app/sprites/fire_ball1.png");
-	private static final ResourceLocation FIRE_BALL2 = new ResourceLocation(Reference.MODID, "textures/app/sprites/fire_ball2.png");
+	public static final ResourceLocation[] HYDROGEN_BUBBLE = getAnims("hydrogen_bubble", 2);
+	public static final ResourceLocation[] FIRE_BALL = getAnims("fire_ball", 2);
 
-	public SpriteHydrogenBall(int x, int y, int scoreIncrease, ApplicationGame application) {
-		super(x, y, 8, HYDROGEN_BUBBLE, application);
+	public SpriteBubble(int x, int y, int scoreIncrease, ApplicationGame application) {
+		super(x, y, 8, getRandomAnim(HYDROGEN_BUBBLE), application);
 		setScoreIncrease((long) scoreIncrease);
 		setLength(10);
 	}
@@ -35,23 +36,25 @@ public class SpriteHydrogenBall extends SpriteObj {
 
 		// Check if cursor is touching a hydrogen bubble
 		if (layoutGame.cursor.isTouching(this)) {
-			if (!(this.getSprite().equals(FIRE_BALL1) || this.getSprite().equals(FIRE_BALL2))) {
-				layoutGame.updateScore(layoutGame.getScore(), getScoreIncrease(), layoutGame.labelScore);
-
-				mc.player.playSound(SoundHandler.BUBBLE_POP, getVolume(), getPitch());
-
-				this.setCanMove(false);
+			for (ResourceLocation sprite : FIRE_BALL) {
+				if (this.getSprite() != sprite) {
+					layoutGame.updateScore(layoutGame.getScore(), getScoreIncrease(), layoutGame.labelScore);
+	
+					mc.player.playSound(SoundHandler.BUBBLE_POP, getVolume(), getPitch());
+	
+					this.setCanMove(false);
+				}
 			}
 		}
 
 		if (!this.canMove()) {
 			super.update(app, layoutGame, mc);
 			if (pointer < getLength()) {
-				this.setSprite((layoutGame.randInt(0, 10) <= 2) ? FIRE_BALL2 : FIRE_BALL1);
+				this.setSprite(getRandomAnim(FIRE_BALL));
 			} else {
 				if (pointer >= getLength())
 					pointer = 0;
-				this.setSprite(HYDROGEN_BUBBLE);
+				this.setSprite(getRandomAnim(HYDROGEN_BUBBLE));
 				this.setCanMove(true);
 				layoutGame.respawn(this, layoutGame.width, layoutGame.height);
 			}

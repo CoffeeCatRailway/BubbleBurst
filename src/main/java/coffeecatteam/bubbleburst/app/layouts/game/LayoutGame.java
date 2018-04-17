@@ -16,8 +16,8 @@ import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCheese;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteHydrogenBall;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
+import coffeecatteam.bubbleburst.app.component.sprites.SpriteBubble;
 import coffeecatteam.bubbleburst.util.Utils.Colors;
 import net.minecraft.client.Minecraft;
 
@@ -71,7 +71,7 @@ public class LayoutGame extends LayoutStandard {
 		// Sprites
 		int bubblesAmount = this.application.getBubblesAmount();
 		for (int i = 0; i < bubblesAmount; i++) {
-			Sprite hydrogen_bubble = new SpriteHydrogenBall(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
+			Sprite hydrogen_bubble = new SpriteBubble(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
 					randInt(1, 3), this.application);
 			this.hydrogen_bubbles.add(hydrogen_bubble);
 			super.addComponent(this.hydrogen_bubbles.get(i));

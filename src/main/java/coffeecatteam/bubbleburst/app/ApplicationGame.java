@@ -9,11 +9,11 @@ import com.mrcrayfish.device.api.app.component.Label;
 
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
-import coffeecatteam.bubbleburst.app.layouts.LayoutIntroCutScene;
-import coffeecatteam.bubbleburst.app.layouts.LayoutSettings;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
 import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutInstructions;
 import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutLevelsScore;
+import coffeecatteam.bubbleburst.app.layouts.menu.LayoutIntroCutScene;
+import coffeecatteam.bubbleburst.app.layouts.menu.LayoutSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -51,30 +51,6 @@ public class ApplicationGame extends Application {
 		this.setDefaultHeight(85);
 	}
 
-	public int getBombsAmount() {
-		return bombsAmount;
-	}
-
-	public void setBombsAmount(int bombsAmount) {
-		this.bombsAmount = bombsAmount;
-	}
-
-	public int getBubblesAmount() {
-		return bubblesAmount;
-	}
-
-	public void setBubblesAmount(int bubblesAmount) {
-		this.bubblesAmount = bubblesAmount;
-	}
-
-	public float getGameVolume() {
-		return gameVolume;
-	}
-
-	public void setGameVolume(float gameVolume) {
-		this.gameVolume = gameVolume;
-	}
-
 	public void init() {
 		// Layouts
 		int gameLayoutsWidth = 362;
@@ -91,8 +67,9 @@ public class ApplicationGame extends Application {
 		this.buttonStart = new Button(5, 5, "Start", Icons.PLAY);
 		this.buttonStart.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
-				this.layoutIntroCutScene.init();
-				this.setCurrentLayout(this.layoutIntroCutScene);
+				Layout layout = this.layoutGame;
+				layout.init();
+				this.setCurrentLayout(layout);
 			}
 		});
 		super.addComponent(this.buttonStart);
@@ -133,51 +110,6 @@ public class ApplicationGame extends Application {
 		super.addComponent(p_face);
 		p_face = new Image(px - 1, py - 1, psize + 2, psize + 2, 160, 32, 32, 32, p_skin);
 		super.addComponent(p_face);
-	}
-	
-	public LayoutIntroCutScene getLayoutIntroCutScene() {
-		return layoutIntroCutScene;
-	}
-
-	public LayoutGame getLayoutGame() {
-		return layoutGame;
-	}
-
-	public LayoutInstructions getLayoutInstructions() {
-		return layoutInstructions;
-	}
-
-	public LayoutLevelsScore getLayoutLevelsScore() {
-		return layoutLevelsScore;
-	}
-
-	public LayoutSettings getLayoutSettings() {
-		return layoutSettings;
-	}
-
-	public void setLayout(Layout layout) {
-		this.setCurrentLayout(layout);
-	}
-
-	public Layout getLayout() {
-		return this.getCurrentLayout();
-	}
-
-	// Game
-	public long getTopScore() {
-		return topScore;
-	}
-
-	public void setTopScore(long topScore) {
-		this.topScore = topScore;
-	}
-
-	public long getTopBombCount() {
-		return topBombCount;
-	}
-
-	public void setTopBombCount(long topBombCount) {
-		this.topBombCount = topBombCount;
 	}
 
 	@Override
@@ -228,5 +160,79 @@ public class ApplicationGame extends Application {
 		nbt.setInteger("bubblesAmount", this.bubblesAmount);
 
 		nbt.setFloat("gameVolume", this.gameVolume);
+	}
+
+	/*
+	 * Variable getters/setters
+	 */
+	public long getTopScore() {
+		return topScore;
+	}
+
+	public void setTopScore(long topScore) {
+		this.topScore = topScore;
+	}
+
+	public long getTopBombCount() {
+		return topBombCount;
+	}
+
+	public void setTopBombCount(long topBombCount) {
+		this.topBombCount = topBombCount;
+	}
+	
+	public int getBombsAmount() {
+		return bombsAmount;
+	}
+
+	public void setBombsAmount(int bombsAmount) {
+		this.bombsAmount = bombsAmount;
+	}
+
+	public int getBubblesAmount() {
+		return bubblesAmount;
+	}
+
+	public void setBubblesAmount(int bubblesAmount) {
+		this.bubblesAmount = bubblesAmount;
+	}
+
+	public float getGameVolume() {
+		return gameVolume;
+	}
+
+	public void setGameVolume(float gameVolume) {
+		this.gameVolume = gameVolume;
+	}
+	
+	/*
+	 * Layout getters
+	 */
+	public LayoutIntroCutScene getLayoutIntroCutScene() {
+		return layoutIntroCutScene;
+	}
+
+	public LayoutGame getLayoutGame() {
+		return layoutGame;
+	}
+
+	public LayoutInstructions getLayoutInstructions() {
+		return layoutInstructions;
+	}
+
+	public LayoutLevelsScore getLayoutLevelsScore() {
+		return layoutLevelsScore;
+	}
+
+	public LayoutSettings getLayoutSettings() {
+		return layoutSettings;
+	}
+
+	public void setLayout(Layout layout) {
+		this.setCurrentLayout(layout);
+	}
+
+	public Layout getLayout() {
+		return this.getCurrentLayout();
 	}
 }
