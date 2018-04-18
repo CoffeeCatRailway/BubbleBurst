@@ -35,7 +35,11 @@ public class SpriteObj extends Sprite {
 	private double fps;
 
 	public SpriteObj(int left, int top, int fps, ResourceLocation sprite, ApplicationGame application) {
-		super(left, top, sprite);
+		this(left, top, fps, sprite, application, 64, 32);
+	}
+	
+	public SpriteObj(int left, int top, int fps, ResourceLocation sprite, ApplicationGame application, int tw, int th) {
+		super(left, top, sprite, tw, th);
 		pointer = 0;
 		this.application = application;
 		
