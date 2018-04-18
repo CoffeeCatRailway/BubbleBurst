@@ -278,9 +278,8 @@ public class LayoutGame extends LayoutStandard {
 	}
 
 	public void respawn(Sprite sprite, int width, int height) {
-		int x = randInt(width-40, width+50); // width-40, width+160 | width + 65, width + 155
-		sprite.xPosition = x; // 160; // x; // 250; // x;
-		sprite.yPosition = ((height / 2) - 4) + randInt(-10, 10);
+		sprite.xPosition = randInt(width-267, width-40);
+		sprite.yPosition = randInt(-5, 15);
 	}
 
 	public static int randInt(int min, int max) {

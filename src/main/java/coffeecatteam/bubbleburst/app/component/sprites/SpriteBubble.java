@@ -15,11 +15,13 @@ import net.minecraft.util.ResourceLocation;
 
 public class SpriteBubble extends SpriteObj {
 
-	public static final ResourceLocation[] HYDROGEN_BUBBLE = getAnims("hydrogen_bubble", 2);
+	public static final ResourceLocation HYDROGEN_BUBBLE = new ResourceLocation(Reference.MODID, "textures/app/sprites/bubble/normal.png");
+	public static final ResourceLocation SUPER_BUBBLE = new ResourceLocation(Reference.MODID, "textures/app/sprites/bubble/super.png");
+	
 	public static final ResourceLocation[] FIRE_BALL = getAnims("fire_ball", 2);
 
 	public SpriteBubble(int x, int y, int scoreIncrease, ApplicationGame application) {
-		super(x, y, 8, getRandomAnim(HYDROGEN_BUBBLE), application);
+		super(x, y, 8, HYDROGEN_BUBBLE, application);
 		setScoreIncrease((long) scoreIncrease);
 		setLength(10);
 	}
@@ -34,16 +36,16 @@ public class SpriteBubble extends SpriteObj {
 		if (this.yPosition > layoutGame.height * 2 + 10)
 			layoutGame.respawn(this, layoutGame.width, layoutGame.height);
 
-		// Check if cursor is touching a hydrogen bubble
+		// Check if cursor is touching a bubble
 		if (layoutGame.cursor.isTouching(this)) {
-			for (ResourceLocation sprite : FIRE_BALL) {
-				if (this.getSprite() != sprite) {
-					layoutGame.updateScore(layoutGame.getScore(), getScoreIncrease(), layoutGame.labelScore);
-	
-					mc.player.playSound(SoundHandler.BUBBLE_POP, getVolume(), getPitch());
-	
-					this.setCanMove(false);
-				}
+			if (this.getSprite().equals(SUPER_BUBBLE)) {
+				layoutGame.updateScore(layoutGame.getScore(), getScoreIncrease() * 5, layoutGame.labelScore);
+				mc.player.playSound(SoundHandler.BUBBLE_POP, getVolume() * 10f, getPitch());
+				this.setCanMove(false);
+			} else if (this.getSprite().equals(HYDROGEN_BUBBLE)) {
+				layoutGame.updateScore(layoutGame.getScore(), getScoreIncrease(), layoutGame.labelScore);
+				mc.player.playSound(SoundHandler.BUBBLE_POP, getVolume(), getPitch());
+				this.setCanMove(false);
 			}
 		}
 
@@ -54,10 +56,15 @@ public class SpriteBubble extends SpriteObj {
 			} else {
 				if (pointer >= getLength())
 					pointer = 0;
-				this.setSprite(getRandomAnim(HYDROGEN_BUBBLE));
+				this.setSprite(isSuperBubble());
 				this.setCanMove(true);
 				layoutGame.respawn(this, layoutGame.width, layoutGame.height);
 			}
 		}
+	}
+	
+	private ResourceLocation isSuperBubble() {
+		int v = new Random().nextInt(100)+1;
+		return (v <= 5) ? SUPER_BUBBLE : HYDROGEN_BUBBLE;
 	}
 }

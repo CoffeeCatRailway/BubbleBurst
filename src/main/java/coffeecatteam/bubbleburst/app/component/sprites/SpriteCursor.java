@@ -53,14 +53,14 @@ public class SpriteCursor extends Sprite {
 		this.xPosition = mouseX - offset;
 		this.yPosition = mouseY - offset;
 
-		if (this.xPosition < 110)
-			this.xPosition = 110;
-		else if (this.xPosition > 305)
-			this.xPosition = 305;
-		if (this.yPosition < 65)
-			this.yPosition = 65;
-		else if (this.yPosition > 160)
-			this.yPosition = 160;
+		if (this.xPosition < 30)
+			this.xPosition = 30;
+		else if (this.xPosition > layoutGame.width + 20)
+			this.xPosition = layoutGame.width + 20;
+		if (this.yPosition < 35)
+			this.yPosition = 35;
+		else if (this.yPosition > layoutGame.height + 25)
+			this.yPosition = layoutGame.height + 25;
 	}
 
 	@Override

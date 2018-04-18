@@ -15,12 +15,14 @@ import net.minecraft.util.SoundEvent;
 public class SpriteBomb extends SpriteObj {
 
 	public static final ResourceLocation[] BOMB = getAnims("bomb", 2);
+	private static ResourceLocation C_BOMB;
 	public static final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
 	
 	public SpriteBomb(int x, int y, int scoreIncrease, ApplicationGame application) {
-		super(x, y, 8, getRandomAnim(BOMB), application);
+		super(x, y, 8, getRandomAnim(BOMB), application, 64, 64);
 		setScoreIncrease((long) scoreIncrease);
 		setLength(5);
+		C_BOMB = getRandomAnim(BOMB);
 	}
 
 	@Override
@@ -51,11 +53,14 @@ public class SpriteBomb extends SpriteObj {
 		if (!this.canMove()) {
 			super.update(app, layoutGame, mc);
 			if (pointer < getLength()) {
+				this.setTextureHeight(32);
 				this.setSprite(EXPLOSION);
+				C_BOMB = getRandomAnim(BOMB);
 			} else {
 				if (pointer >= getLength())
 					pointer = 0;
-				this.setSprite(getRandomAnim(BOMB));
+				this.setTextureHeight(64);
+				this.setSprite(C_BOMB);
 				this.setCanMove(true);
 				layoutGame.respawn(this, layoutGame.width, layoutGame.height);
 			}

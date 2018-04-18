@@ -50,7 +50,7 @@ public class LayoutInstructions extends LayoutStandard {
 		super.addComponent(this.labelVersion);
 
 		ResourceLocation[] BOMB = SpriteBomb.BOMB;
-		this.bomb = new Sprite(50, 3, BOMB[0]) {
+		this.bomb = new Sprite(50, 3, BOMB[0], 64, 64) {
 
 			private final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
 

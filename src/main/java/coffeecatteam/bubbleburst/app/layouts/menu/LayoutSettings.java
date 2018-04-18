@@ -35,7 +35,7 @@ public class LayoutSettings extends LayoutStandard {
 	// Bombs Amount
 	private Label labelBombsAmount;
 	private TextArea textAreaBombsAmount;
-	private int bombsDefault = 3; // default: 3
+	private int bombsDefault = 6; // default: 6
 	private int bombsAmount = bombsDefault;
 	private int maxBombsAmount = 10000; // default: 10000
 	private boolean textAreaBombsAmountCanUpdate = true;
