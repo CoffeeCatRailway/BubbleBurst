@@ -7,13 +7,16 @@ import com.mrcrayfish.device.api.app.component.Button;
 import com.mrcrayfish.device.api.app.component.Image;
 import com.mrcrayfish.device.api.app.component.Label;
 
+import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
 import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutInstructions;
 import coffeecatteam.bubbleburst.app.layouts.instructions.LayoutLevelsScore;
 import coffeecatteam.bubbleburst.app.layouts.menu.LayoutIntroCutScene;
-import coffeecatteam.bubbleburst.app.layouts.menu.LayoutSettings;
+import coffeecatteam.bubbleburst.app.layouts.menu.settings.LayoutSettings;
+import coffeecatteam.bubbleburst.app.layouts.menu.settings.LayoutSettingsSkins;
+import coffeecatteam.bubbleburst.util.handlers.AnimationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -35,6 +38,7 @@ public class ApplicationGame extends Application {
 	private LayoutLevelsScore layoutLevelsScore;
 
 	private LayoutSettings layoutSettings;
+	private LayoutSettingsSkins layoutSettingsSkins;
 
 	// Game
 	private long topScore;
@@ -52,6 +56,8 @@ public class ApplicationGame extends Application {
 	}
 
 	public void init() {
+		AnimationHandler.init();
+		
 		// Layouts
 		int gameLayoutsWidth = 362;
 		int gameLayoutsHeiht = 165;
@@ -61,7 +67,10 @@ public class ApplicationGame extends Application {
 		this.layoutInstructions = new LayoutInstructions(260, 125, this);
 		this.layoutLevelsScore = new LayoutLevelsScore(237, 115, this);
 
-		this.layoutSettings = new LayoutSettings(260, 105, this);
+		int sWidth = 260;
+		int sHeight = 115;
+		this.layoutSettings = new LayoutSettings(sWidth, sHeight, this, Reference.NAME + " - Stettings");
+		this.layoutSettingsSkins = new LayoutSettingsSkins(sWidth, sHeight, this, Reference.NAME + " - Skin Stettings");
 
 		// Start Menu
 		this.buttonStart = new Button(5, 5, "Start", Icons.PLAY);
@@ -126,6 +135,7 @@ public class ApplicationGame extends Application {
 		this.layoutLevelsScore.onTick();
 
 		this.layoutSettings.onTick();
+		this.layoutSettingsSkins.onTick();
 
 		super.onTick();
 	}
@@ -141,10 +151,12 @@ public class ApplicationGame extends Application {
 	}
 
 	public void load(NBTTagCompound nbt) {
+		// Score
 		this.topScore = nbt.getLong("topScore");
-		this.topBombCount = nbt.getLong("topBombCount");
 
 		// Settings
+		this.topBombCount = nbt.getLong("topBombCount");
+		
 		this.bombsAmount = nbt.getInteger("bombsAmount");
 		this.bubblesAmount = nbt.getInteger("bubblesAmount");
 
@@ -152,10 +164,12 @@ public class ApplicationGame extends Application {
 	}
 
 	public void save(NBTTagCompound nbt) {
+		// Score
 		nbt.setLong("topScore", this.getTopScore());
-		nbt.setLong("topBombCount", this.getTopBombCount());
 
 		// Settings
+		nbt.setLong("topBombCount", this.getTopBombCount());
+		
 		nbt.setInteger("bombsAmount", this.bombsAmount);
 		nbt.setInteger("bubblesAmount", this.bubblesAmount);
 
@@ -226,6 +240,10 @@ public class ApplicationGame extends Application {
 
 	public LayoutSettings getLayoutSettings() {
 		return layoutSettings;
+	}
+	
+	public LayoutSettingsSkins getLayoutSettingsSkins() {
+		return layoutSettingsSkins;
 	}
 
 	public void setLayout(Layout layout) {

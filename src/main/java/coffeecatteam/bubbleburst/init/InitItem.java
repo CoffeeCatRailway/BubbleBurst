@@ -15,14 +15,14 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class ItemInit {
+public class InitItem {
 
 	public static Item fire_stick;
 	public static Item bomb;
 
 	public static void init() {
 		fire_stick = new ItemBase("fire_stick", 1);
-		bomb = new ItemBomb("bomb");
+		bomb = new ItemBomb("bomb", 10);
 	}
 
 	@EventBusSubscriber(modid = Reference.MODID)

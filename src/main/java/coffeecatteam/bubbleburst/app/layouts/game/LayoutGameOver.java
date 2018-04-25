@@ -11,7 +11,7 @@ import com.mrcrayfish.device.api.app.component.Label;
 import coffeecatteam.bubbleburst.BubbleBurst;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
-import coffeecatteam.bubbleburst.app.layouts.menu.LayoutSettings;
+import coffeecatteam.bubbleburst.app.layouts.menu.settings.LayoutSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;

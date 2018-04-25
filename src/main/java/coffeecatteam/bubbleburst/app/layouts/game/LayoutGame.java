@@ -7,17 +7,16 @@ import java.util.Date;
 import java.util.List;
 
 import com.mrcrayfish.device.api.app.Icons;
-import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Button;
 import com.mrcrayfish.device.api.app.component.Label;
 
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
+import coffeecatteam.bubbleburst.app.component.sprites.SpriteBubble;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCheese;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteBubble;
 import coffeecatteam.bubbleburst.util.Utils.Colors;
 import net.minecraft.client.Minecraft;
 
@@ -38,11 +37,11 @@ public class LayoutGame extends LayoutStandard {
 	public long maxTime = 1000 * 2;
 
 	// Sprites
-	public Sprite cursor;
+	public SpriteCursor cursor;
 	public SpriteCheese cheese;
 
-	public List<Sprite> hydrogen_bubbles;
-	public List<Sprite> bombs;
+	public List<SpriteBubble> hydrogen_bubbles;
+	public List<SpriteBomb> bombs;
 
 	// Score
 	public Label labelScore;
@@ -71,7 +70,7 @@ public class LayoutGame extends LayoutStandard {
 		// Sprites
 		int bubblesAmount = this.application.getBubblesAmount();
 		for (int i = 0; i < bubblesAmount; i++) {
-			Sprite hydrogen_bubble = new SpriteBubble(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
+			SpriteBubble hydrogen_bubble = new SpriteBubble(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
 					randInt(1, 3), this.application);
 			this.hydrogen_bubbles.add(hydrogen_bubble);
 			super.addComponent(this.hydrogen_bubbles.get(i));
@@ -79,7 +78,7 @@ public class LayoutGame extends LayoutStandard {
 
 		int bombAmount = this.application.getBombsAmount();
 		for (int i = 0; i < bombAmount; i++) {
-			Sprite bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(1, 3),
+			SpriteBomb bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(1, 3),
 					this.application);
 			this.bombs.add(bomb);
 			super.addComponent(this.bombs.get(i));

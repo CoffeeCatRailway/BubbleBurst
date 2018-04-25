@@ -1,5 +1,8 @@
 package coffeecatteam.bubbleburst.app.component.sprites;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 

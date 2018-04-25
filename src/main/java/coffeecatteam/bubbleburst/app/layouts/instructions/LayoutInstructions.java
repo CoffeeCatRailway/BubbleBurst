@@ -2,6 +2,8 @@ package coffeecatteam.bubbleburst.app.layouts.instructions;
 
 import java.awt.Color;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Icons;
@@ -15,6 +17,7 @@ import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
+import coffeecatteam.bubbleburst.util.handlers.AnimationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
@@ -49,8 +52,7 @@ public class LayoutInstructions extends LayoutStandard {
 		this.labelVersion.setScale(1d);
 		super.addComponent(this.labelVersion);
 
-		ResourceLocation[] BOMB = SpriteBomb.BOMB;
-		this.bomb = new Sprite(50, 3, BOMB[0], 64, 64) {
+		this.bomb = new Sprite(50, 3, AnimationHandler.BOMB.get(0), 64, 64) {
 
 			private final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
 
@@ -65,9 +67,13 @@ public class LayoutInstructions extends LayoutStandard {
 				long maxTime = 1000 * 3;
 
 				if (newTime >= minTime && newTime <= maxTime) {
+					this.setTextureWidth(64);
+					this.setTextureHeight(32);
 					this.setSprite(EXPLOSION);
 				} else {
-					this.setSprite(BOMB[0]);
+					this.setTextureWidth(64);
+					this.setTextureHeight(64);
+					this.setSprite(AnimationHandler.BOMB.get(0));
 				}
 
 				if (newTime > maxTime) {

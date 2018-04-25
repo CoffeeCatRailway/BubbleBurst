@@ -1,13 +1,10 @@
 package coffeecatteam.bubbleburst.app.component.sprites;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.core.Laptop;
 
 import coffeecatteam.bubbleburst.Reference;
-import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
 import net.minecraft.client.Minecraft;
@@ -15,18 +12,23 @@ import net.minecraft.util.ResourceLocation;
 
 public class SpriteCursor extends Sprite {
 
-	private static final ResourceLocation FULL = new ResourceLocation(Reference.MODID,
-			"textures/app/sprites/cursor/cursor_full.png");
-	private static final ResourceLocation HALF = new ResourceLocation(Reference.MODID,
-			"textures/app/sprites/cursor/cursor_half.png");
-	private static final ResourceLocation EMPTY = new ResourceLocation(Reference.MODID,
-			"textures/app/sprites/cursor/cursor_empty.png");
+	private static ResourceLocation FULL = new ResourceLocation(Reference.MODID, "textures/app/sprites/cursor/default/full.png");
+	private static ResourceLocation HALF = new ResourceLocation(Reference.MODID, "textures/app/sprites/cursor/default/half.png");
+	private static ResourceLocation EMPTY = new ResourceLocation(Reference.MODID, "textures/app/sprites/cursor/default/empty.png");
+	private static ResourceLocation CURRENT_SKIN = FULL;
 
 	private int mouseX;
 	private int mouseY;
 
 	public SpriteCursor(int x, int y) {
-		super(x, y, FULL);
+		super(x, y, CURRENT_SKIN);
+	}
+	
+	public static void setSkin(String skin) {
+		String path = "textures/app/sprites/cursor/" + skin;
+		FULL = new ResourceLocation(Reference.MODID, path + "/full.png");
+		HALF = new ResourceLocation(Reference.MODID, path + "/half.png");
+		EMPTY = new ResourceLocation(Reference.MODID, path + "/empty.png");
 	}
 
 	@Override
@@ -37,12 +39,21 @@ public class SpriteCursor extends Sprite {
 		int maxGameTime = layoutGame.getMaxGameTime();
 
 		if (gameTime > maxGameTime / 2) {
-			this.setSprite(FULL);
+			CURRENT_SKIN = FULL;
 		} else if (gameTime <= maxGameTime / 2 && gameTime > maxGameTime / 4) {
-			this.setSprite(HALF);
+			CURRENT_SKIN = HALF;
 		} else if (gameTime <= maxGameTime / 4) {
-			this.setSprite(EMPTY);
+			CURRENT_SKIN = EMPTY;
 		}
+
+		if (CURRENT_SKIN.getResourcePath().contains("laser_sword")) {
+			setTextureWidth(128);
+			setTextureHeight(64);
+		} else {
+			setTextureWidth(64);
+			setTextureHeight(32);
+		}
+		this.setSprite(CURRENT_SKIN);
 
 		// Cursor movement
 		int offset = 4;

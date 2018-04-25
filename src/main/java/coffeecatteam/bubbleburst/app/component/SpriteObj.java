@@ -1,7 +1,9 @@
 package coffeecatteam.bubbleburst.app.component;
 
+import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Table;
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 
@@ -12,10 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 
-public class SpriteObj extends Sprite {
+public abstract class SpriteObj extends Sprite {
 
 	protected int pointer;
-	protected ApplicationGame application;
+	protected static ApplicationGame application;
 
 	protected int WIDTH;
 	protected int HEIGHT;
@@ -53,19 +55,6 @@ public class SpriteObj extends Sprite {
 		currentTime = 0;
 		lastTime = Utils.getTime();
 		this.fps = 1.0 / (double) fps;
-	}
-	
-	// Anims
-	public static ResourceLocation[] getAnims(String sprite, int amount) {
-		ResourceLocation[] locations = new ResourceLocation[amount];
-		for (int i = 0; i < amount; i++) {
-			locations[i] = new ResourceLocation(Reference.MODID, "textures/app/sprites/" + sprite + "/anim" + String.valueOf(i) + ".png");
-		}
-		return locations;
-	}
-	
-	protected static ResourceLocation getRandomAnim(ResourceLocation[] anims) {
-		return anims[new Random().nextInt(anims.length)];
 	}
 	
 	// Sounds

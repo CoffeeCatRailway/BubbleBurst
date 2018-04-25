@@ -1,5 +1,7 @@
 package coffeecatteam.bubbleburst.app.component.sprites;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.mrcrayfish.device.api.app.Application;
@@ -9,6 +11,7 @@ import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.SpriteObj;
 import coffeecatteam.bubbleburst.app.layouts.game.LayoutGame;
+import coffeecatteam.bubbleburst.util.handlers.AnimationHandler;
 import coffeecatteam.bubbleburst.util.handlers.SoundHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +21,7 @@ public class SpriteBubble extends SpriteObj {
 	public static final ResourceLocation HYDROGEN_BUBBLE = new ResourceLocation(Reference.MODID, "textures/app/sprites/bubble/normal.png");
 	public static final ResourceLocation SUPER_BUBBLE = new ResourceLocation(Reference.MODID, "textures/app/sprites/bubble/super.png");
 	
-	public static final ResourceLocation[] FIRE_BALL = getAnims("fire_ball", 2);
+	public static final List<ResourceLocation> FIRE_BALL = AnimationHandler.FIRE_BALL;
 
 	public SpriteBubble(int x, int y, int scoreIncrease, ApplicationGame application) {
 		super(x, y, 8, HYDROGEN_BUBBLE, application);
@@ -29,7 +32,8 @@ public class SpriteBubble extends SpriteObj {
 	@Override
 	public void update(Application app, Layout layout, Minecraft mc) {
 		LayoutGame layoutGame = (LayoutGame) layout;
-		this.speed = 5 + layoutGame.randInt(0, 3);
+		boolean isSuper = this.getSprite().equals(SUPER_BUBBLE);
+		this.speed = 5 + layoutGame.randInt(0, 3) + ((isSuper) ? 2 : 0);
 
 		if (this.canMove())
 			this.yPosition += this.speed;
@@ -38,7 +42,7 @@ public class SpriteBubble extends SpriteObj {
 
 		// Check if cursor is touching a bubble
 		if (layoutGame.cursor.isTouching(this)) {
-			if (this.getSprite().equals(SUPER_BUBBLE)) {
+			if (isSuper) {
 				layoutGame.updateScore(layoutGame.getScore(), getScoreIncrease() * 5, layoutGame.labelScore);
 				mc.player.playSound(SoundHandler.BUBBLE_POP, getVolume() * 10f, getPitch());
 				this.setCanMove(false);
@@ -49,10 +53,11 @@ public class SpriteBubble extends SpriteObj {
 			}
 		}
 
+		// Check for movement
 		if (!this.canMove()) {
 			super.update(app, layoutGame, mc);
 			if (pointer < getLength()) {
-				this.setSprite(getRandomAnim(FIRE_BALL));
+				this.setSprite(AnimationHandler.getRandomAnimation(FIRE_BALL));
 			} else {
 				if (pointer >= getLength())
 					pointer = 0;

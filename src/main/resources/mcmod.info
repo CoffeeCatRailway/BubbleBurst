@@ -3,7 +3,7 @@
   "modid": "bubble_burst",
   "name": "Bubble Burst",
   "description": "Burst the bubbles!",
-  "version": "2.3-pre1",
+  "version": "3.0",
   "mcversion": "${mcversion}",
   "url": "https://minecraft.curseforge.com/projects/bubble-burst",
   "authorList": ["CoffeeCatTeam"],

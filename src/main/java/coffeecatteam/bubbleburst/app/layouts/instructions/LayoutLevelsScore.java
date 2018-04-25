@@ -2,7 +2,7 @@ package coffeecatteam.bubbleburst.app.layouts.instructions;
 
 import java.awt.Color;
 import java.util.Date;
-import java.util.Random;
+import java.util.List;
 
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Icons;
@@ -11,15 +11,13 @@ import com.mrcrayfish.device.api.app.component.Button;
 import com.mrcrayfish.device.api.app.component.Label;
 import com.mrcrayfish.device.api.app.component.Text;
 
-import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
-import coffeecatteam.bubbleburst.app.component.SpriteObj;
 import coffeecatteam.bubbleburst.app.component.sprites.SpriteBubble;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.util.Utils.Colors;
+import coffeecatteam.bubbleburst.util.handlers.AnimationHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
@@ -51,10 +49,9 @@ public class LayoutLevelsScore extends LayoutStandard {
 		});
 		super.addComponent(this.buttonBack);
 
-		ResourceLocation[] HYDROGEN_BUBBLE = SpriteBubble.HYDROGEN_BUBBLE;
-		this.hydrogen_bubble = new Sprite(50, 5, HYDROGEN_BUBBLE[0]) {
+		this.hydrogen_bubble = new Sprite(50, 5, SpriteBubble.HYDROGEN_BUBBLE) {
 			
-			private final ResourceLocation[] FIRE_BALL = SpriteBubble.FIRE_BALL;
+			private final List<ResourceLocation> FIRE_BALL = AnimationHandler.FIRE_BALL;
 
 			private long time = new Date().getTime();
 
@@ -67,9 +64,9 @@ public class LayoutLevelsScore extends LayoutStandard {
 				long maxTime = 1000 * 3;
 
 				if (newTime >= minTime && newTime <= maxTime) {
-					this.setSprite(FIRE_BALL[0]);
+					this.setSprite(AnimationHandler.getRandomAnimation(FIRE_BALL));
 				} else {
-					this.setSprite(HYDROGEN_BUBBLE[0]);
+					this.setSprite(SpriteBubble.HYDROGEN_BUBBLE);
 				}
 
 				if (newTime > maxTime) {

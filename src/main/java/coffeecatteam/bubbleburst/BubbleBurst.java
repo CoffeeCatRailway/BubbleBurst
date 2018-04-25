@@ -5,7 +5,8 @@ import org.apache.logging.log4j.Logger;
 import com.mrcrayfish.device.api.ApplicationManager;
 
 import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.init.ItemInit;
+import coffeecatteam.bubbleburst.init.InitEntity;
+import coffeecatteam.bubbleburst.init.InitItem;
 import coffeecatteam.bubbleburst.util.Utils;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -27,7 +28,8 @@ public class BubbleBurst {
 
 	@EventHandler
 	public static void preInit(FMLPreInitializationEvent event) {
-		ItemInit.init();
+		InitEntity.init();
+		InitItem.init();
 	}
 
 	@EventHandler
@@ -45,7 +47,7 @@ public class BubbleBurst {
 
 		@Override
 		public ItemStack getTabIconItem() {
-			return new ItemStack(ItemInit.fire_stick);
+			return new ItemStack(InitItem.fire_stick);
 		}
 	}
 }

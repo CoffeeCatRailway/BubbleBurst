@@ -1,5 +1,7 @@
 package coffeecatteam.bubbleburst.app.component.sprites;
 
+import java.util.Random;
+
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Layout;
 
@@ -14,15 +16,23 @@ import net.minecraft.util.SoundEvent;
 
 public class SpriteBomb extends SpriteObj {
 
-	public static final ResourceLocation[] BOMB = getAnims("bomb", 2);
-	private static ResourceLocation C_BOMB;
-	public static final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
+	// " + application.getLayoutSettingsSkins().getBombSkin() + "
+	private static ResourceLocation NORMAL = new ResourceLocation(Reference.MODID, "textures/app/sprites/bomb/default/normal.png");
+	private static ResourceLocation SPINNING = new ResourceLocation(Reference.MODID, "textures/app/sprites/bomb/default/spinning.png");
+	private static ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
+	private static ResourceLocation CURRENT_SKIN = NORMAL;
 	
 	public SpriteBomb(int x, int y, int scoreIncrease, ApplicationGame application) {
-		super(x, y, 8, getRandomAnim(BOMB), application, 64, 64);
+		super(x, y, 8, CURRENT_SKIN, application, 64, 64);
 		setScoreIncrease((long) scoreIncrease);
 		setLength(5);
-		C_BOMB = getRandomAnim(BOMB);
+	}
+	
+	public static void setSkin(String skin) {
+		String path = "textures/app/sprites/bomb/" + skin;
+		NORMAL = new ResourceLocation(Reference.MODID, path + "/normal.png");
+		SPINNING = new ResourceLocation(Reference.MODID, path + "/spinning.png");
+		CURRENT_SKIN = pickSkin();
 	}
 
 	@Override
@@ -42,7 +52,7 @@ public class SpriteBomb extends SpriteObj {
 				layoutGame.updateBombCount(layoutGame.getBombCount(), 1, layoutGame.labelBombCount);
 
 				float v = this.application.getGameVolume()-0.3f;
-				setVolume(v < 0.0f ? 0.0f : v <= 0.3f ? v += ((0.1f+v)*0.5f) : v);
+				setVolume(v < 0.0f ? 0.0f : v <= 0.3f ? v += ((0.1f + v) * 0.5f) : v);
 				SoundEvent sound = (layoutGame.randInt(0, 10) < 2) ? SoundHandler.BOMB_1 : SoundHandler.BOMB_2;
 				mc.player.playSound(sound, getVolume(), getPitch());
 
@@ -50,20 +60,25 @@ public class SpriteBomb extends SpriteObj {
 			}
 		}
 
+		// Set anim
 		if (!this.canMove()) {
 			super.update(app, layoutGame, mc);
 			if (pointer < getLength()) {
 				this.setTextureHeight(32);
-				this.setSprite(EXPLOSION);
-				C_BOMB = getRandomAnim(BOMB);
+				CURRENT_SKIN = EXPLOSION;
 			} else {
 				if (pointer >= getLength())
 					pointer = 0;
 				this.setTextureHeight(64);
-				this.setSprite(C_BOMB);
+				CURRENT_SKIN = pickSkin();
 				this.setCanMove(true);
 				layoutGame.respawn(this, layoutGame.width, layoutGame.height);
 			}
+			this.setSprite(CURRENT_SKIN);
 		}
+	}
+	
+	private static ResourceLocation pickSkin() {
+		return (new Random().nextInt(1) == 0) ? NORMAL : SPINNING;
 	}
 }

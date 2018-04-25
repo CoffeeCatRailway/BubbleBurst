@@ -1,41 +1,28 @@
-package coffeecatteam.bubbleburst.app.layouts.menu;
+package coffeecatteam.bubbleburst.app.layouts.menu.settings;
 
-import java.awt.Color;
 import java.text.DecimalFormat;
 
 import com.mrcrayfish.device.api.app.Icons;
-import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Button;
-import com.mrcrayfish.device.api.app.component.ComboBox;
-import com.mrcrayfish.device.api.app.component.ItemList;
 import com.mrcrayfish.device.api.app.component.Label;
 import com.mrcrayfish.device.api.app.component.Slider;
 import com.mrcrayfish.device.api.app.component.TextArea;
-import com.mrcrayfish.device.api.app.renderer.ListItemRenderer;
-import com.mrcrayfish.device.api.io.Drive;
-import com.mrcrayfish.device.api.utils.RenderUtil;
 
-import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class LayoutSettings extends LayoutStandard {
-	
-	public static boolean hasDefaults = true;
 
 	private Button buttonBack;
 	private Label labelVersion;
+	private Button buttonSettingsSkins;
 
 	// Bombs Amount
 	private Label labelBombsAmount;
 	private TextArea textAreaBombsAmount;
-	private int bombsDefault = 6; // default: 6
+	private int bombsDefault = 12; // default: 12
 	private int bombsAmount = bombsDefault;
 	private int maxBombsAmount = 10000; // default: 10000
 	private boolean textAreaBombsAmountCanUpdate = true;
@@ -43,7 +30,7 @@ public class LayoutSettings extends LayoutStandard {
 	// Bubbles Amount
 	private Label labelBubblesAmount;
 	private TextArea textAreaBubblesAmount;
-	private int bubblesDefault = 6; // default: 6
+	private int bubblesDefault = bombsDefault * 2; // default: bombsDefault * 2
 	private int bubblesAmount = bubblesDefault;
 	private int maxBubblesAmount = 10000; // default: 10000
 	private boolean textAreaBubblesAmountCanUpdate = true;
@@ -53,8 +40,9 @@ public class LayoutSettings extends LayoutStandard {
 	private Slider sliderGameVolume;
 	private float gameVolume = 1.0f;
 
-	public LayoutSettings(int width, int height, ApplicationGame application) {
+	public LayoutSettings(int width, int height, ApplicationGame application, String title) {
 		super(width, height, application, true, BG_SETTINGS);
+		setTitle(title);
 	}
 
 	@Override
@@ -77,9 +65,16 @@ public class LayoutSettings extends LayoutStandard {
 			}
 		});
 		super.addComponent(this.buttonBack);
+		
+		this.buttonSettingsSkins = new Button(50, 3, "Skins", Icons.WRENCH);
+		this.buttonSettingsSkins.setClickListener((mouseX, mouseY, mouseButton) -> {
+			if (mouseButton == 0) {
+				this.application.setCurrentLayout(this.application.getLayoutSettingsSkins());
+			}
+		});
+		super.addComponent(this.buttonSettingsSkins);
 
-		this.labelVersion = new Label("Version: " + this.application.getInfo().getVersion(), 50, 8);
-		this.labelVersion.setScale(1d);
+		this.labelVersion = new Label("Version: " + this.application.getInfo().getVersion(), 100, 10);
 		super.addComponent(this.labelVersion);
 
 		// Settings
@@ -101,9 +96,9 @@ public class LayoutSettings extends LayoutStandard {
 		this.textAreaBubblesAmount.setText(String.valueOf(this.bubblesAmount));
 		super.addComponent(this.textAreaBubblesAmount);
 		
-		this.sliderGameVolume = new Slider(105, 37, 70);
+		this.sliderGameVolume = new Slider(95, 37, 70);
 		super.addComponent(this.sliderGameVolume);
-		this.labelGameVolume = new Label("Game Volume: ", 105, 27);
+		this.labelGameVolume = new Label("Game Volume: ", 95, 27);
 		super.addComponent(this.labelGameVolume);
 
 		// Set Settings Values
@@ -117,6 +112,7 @@ public class LayoutSettings extends LayoutStandard {
 	@Override
 	public void onTick() {
 		if (this.application.getCurrentLayout() == this) {
+			
 			// Bombs Amount
 			String textAreaBombsAmountText = this.textAreaBombsAmount.getText();
 			for (int i = 0; i < textAreaBombsAmountText.length(); i++) {
