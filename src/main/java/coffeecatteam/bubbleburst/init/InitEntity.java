@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 public class InitEntity {
 
 	public static void init() {
-		register("bomb", EntityBomb.class, -1, 1);
+		register("bomb", EntityBomb.class, -1, 80);
 	}
 
 	private static void register(String name, Class<? extends Entity> entity, int id, int trackingRange) {

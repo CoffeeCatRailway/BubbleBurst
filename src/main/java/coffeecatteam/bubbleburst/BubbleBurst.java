@@ -7,10 +7,15 @@ import com.mrcrayfish.device.api.ApplicationManager;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.init.InitEntity;
 import coffeecatteam.bubbleburst.init.InitItem;
+import coffeecatteam.bubbleburst.init.entity.EntityBomb;
 import coffeecatteam.bubbleburst.util.Utils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -34,8 +39,10 @@ public class BubbleBurst {
 
 	@EventHandler
 	public static void init(FMLInitializationEvent event) {
-		ApplicationManager.registerApplication(new ResourceLocation(Reference.MODID, "bubble_game"),
-				ApplicationGame.class);
+		ApplicationManager.registerApplication(new ResourceLocation(Reference.MODID, "bubble_game"), ApplicationGame.class);
+		
+		RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
+		RenderingRegistry.registerEntityRenderingHandler(EntityBomb.class, new RenderSnowball(renderManager, InitItem.bomb, Minecraft.getMinecraft().getRenderItem()));
 	}
 
 	private static class TabBubbleBurst extends CreativeTabs {
