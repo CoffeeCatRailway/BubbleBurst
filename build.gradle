@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "3.0"
+version = "3.1"
 group = "coffeecatteam.bubble_burst"
 archivesBaseName = "BubbleBurst"
 
@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile "com.mrcrayfish:device-api:0.3.1-1.12.2"
+    compile "com.mrcrayfish:device-api:0.4.0-1.12.2"
 }
 
 processResources {
