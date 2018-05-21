@@ -21,6 +21,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
+
 public class ApplicationGame extends Application {
 
 	// Start Menu
@@ -55,7 +57,7 @@ public class ApplicationGame extends Application {
 		this.setDefaultHeight(85);
 	}
 
-	public void init() {
+	public void init(@Nullable NBTTagCompound compound) {
 		AnimationHandler.init();
 		
 		// Layouts
