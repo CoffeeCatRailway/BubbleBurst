@@ -13,7 +13,7 @@ import com.mrcrayfish.device.api.app.component.Text;
 
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteBubble;
+import coffeecatteam.bubbleburst.app.component.sprites.entity.SpriteBubble;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.util.Utils.Colors;
 import coffeecatteam.bubbleburst.util.handlers.AnimationHandler;

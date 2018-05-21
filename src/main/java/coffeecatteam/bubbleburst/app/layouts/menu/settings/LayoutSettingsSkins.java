@@ -1,37 +1,29 @@
 package coffeecatteam.bubbleburst.app.layouts.menu.settings;
 
+import coffeecatteam.bubbleburst.Reference;
+import coffeecatteam.bubbleburst.app.ApplicationGame;
+import coffeecatteam.bubbleburst.app.component.Sprite;
+import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
+import coffeecatteam.bubbleburst.app.component.sprites.entity.SpriteBomb;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
+import coffeecatteam.bubbleburst.util.handlers.AnimationHandler;
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Icons;
 import com.mrcrayfish.device.api.app.Layout;
 import com.mrcrayfish.device.api.app.component.Button;
 import com.mrcrayfish.device.api.app.component.ItemList;
 import com.mrcrayfish.device.api.app.component.Label;
-
-import coffeecatteam.bubbleburst.Reference;
-import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.app.component.Sprite;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
-import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
-import coffeecatteam.bubbleburst.util.handlers.AnimationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 public class LayoutSettingsSkins extends LayoutStandard {
 
-	private Button buttonBack;
-	private Label labelVersion;
-
 	// Cursor
-	private Label labelCursor;
 	private ItemList<String> itemListCursor;
-	private String skinCursor;
 	private Sprite spriteCursor;
 
 	// Bomb
-	private Label labelBomb;
 	private ItemList<String> itemListBomb;
-	private String skinBomb;
 	private Sprite spriteBomb;
 
 	public LayoutSettingsSkins(int width, int height, ApplicationGame application, String title) {
@@ -42,27 +34,27 @@ public class LayoutSettingsSkins extends LayoutStandard {
 	@Override
 	public void init() {
 		super.init();
-		
-		this.buttonBack = new Button(5, 3, "Back", Icons.ARROW_LEFT);
-		this.buttonBack.setToolTip("Back", "Go back to settings.");
-		this.buttonBack.setClickListener((mouseX, mouseY, mouseButton) -> {
+
+        Button buttonBack = new Button(5, 3, "Back", Icons.ARROW_LEFT);
+		buttonBack.setToolTip("Back", "Go back to settings.");
+		buttonBack.setClickListener((mouseX, mouseY, mouseButton) -> {
 			if (mouseButton == 0) {
 				this.application.setLayout(this.application.getLayoutSettings());
 			}
 		});
-		super.addComponent(this.buttonBack);
+		super.addComponent(buttonBack);
 
-		this.labelVersion = new Label("Version: " + this.application.getInfo().getVersion(), 55, 10);
-		super.addComponent(this.labelVersion);
+        Label labelVersion = new Label("Version: " + this.application.getInfo().getVersion(), 55, 10);
+		super.addComponent(labelVersion);
 		
 		// Skins
 		int skinsX = 3;
 		int skinsY = 28;
 		
 		// Cursor
-		this.labelCursor = new Label("Cursor skins:", skinsX, skinsY);
-		super.addComponent(this.labelCursor);
-		this.itemListCursor = new ItemList<String>(skinsX, skinsY + 10, 70, 4);
+        Label labelCursor = new Label("Cursor skins:", skinsX, skinsY);
+		super.addComponent(labelCursor);
+		this.itemListCursor = new ItemList<>(skinsX, skinsY + 10, 70, 4);
 		for (String value : AnimationHandler.CURSOR_SKINS) {
 			this.itemListCursor.addItem(value);
 		}
@@ -80,9 +72,9 @@ public class LayoutSettingsSkins extends LayoutStandard {
 		super.addComponent(this.spriteCursor);
 		
 		// Bomb
-		this.labelBomb = new Label("Bomb skins:", skinsX + 80, skinsY);
-		super.addComponent(this.labelBomb);
-		this.itemListBomb = new ItemList<String>(skinsX + 80, skinsY + 10, 70, 4);
+        Label labelBomb = new Label("Bomb skins:", skinsX + 80, skinsY);
+		super.addComponent(labelBomb);
+		this.itemListBomb = new ItemList<>(skinsX + 80, skinsY + 10, 70, 4);
 		for (String value : AnimationHandler.BOMB_SKINS) {
 			this.itemListBomb.addItem(value);
 		}
@@ -98,9 +90,6 @@ public class LayoutSettingsSkins extends LayoutStandard {
 			}
 		};
 		super.addComponent(this.spriteBomb);
-
-		this.skinCursor = this.itemListCursor.getItem(0);
-		this.skinBomb = this.itemListBomb.getItem(0);
 	}
 
 	@Override
@@ -112,15 +101,8 @@ public class LayoutSettingsSkins extends LayoutStandard {
 			
 			// Bomb
 			this.spriteBomb.update(this.application, this, Minecraft.getMinecraft());
-			SpriteBomb.setSkin(this.itemListBomb.getSelectedItem());
+			String bombSkin = this.itemListBomb.getSelectedItem();
+			SpriteBomb.setSkin(bombSkin);
 		}
-	}
-	
-	public String getCursorSkin() {
-		return itemListCursor.getSelectedItem();
-	}
-	
-	public String getBombSkin() {
-		return itemListBomb.getSelectedItem();
 	}
 }

@@ -15,7 +15,7 @@ import com.mrcrayfish.device.api.app.component.Text;
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.app.ApplicationGame;
 import coffeecatteam.bubbleburst.app.component.Sprite;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
+import coffeecatteam.bubbleburst.app.component.sprites.entity.SpriteBomb;
 import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
 import coffeecatteam.bubbleburst.util.handlers.AnimationHandler;
 import net.minecraft.client.Minecraft;

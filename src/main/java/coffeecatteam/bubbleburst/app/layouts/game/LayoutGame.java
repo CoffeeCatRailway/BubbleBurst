@@ -1,58 +1,52 @@
 package coffeecatteam.bubbleburst.app.layouts.game;
 
-import java.awt.Color;
-import java.text.SimpleDateFormat;
+import coffeecatteam.bubbleburst.app.ApplicationGame;
+import coffeecatteam.bubbleburst.app.component.Sprite;
+import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
+import coffeecatteam.bubbleburst.app.component.sprites.entity.SpriteBomb;
+import coffeecatteam.bubbleburst.app.component.sprites.entity.SpriteBubble;
+import coffeecatteam.bubbleburst.app.component.sprites.special.SpriteCheese;
+import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
+import coffeecatteam.bubbleburst.util.Utils.Colors;
+import com.mrcrayfish.device.api.app.Icons;
+import com.mrcrayfish.device.api.app.component.Button;
+import com.mrcrayfish.device.api.app.component.Label;
+import net.minecraft.client.Minecraft;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.mrcrayfish.device.api.app.Icons;
-import com.mrcrayfish.device.api.app.component.Button;
-import com.mrcrayfish.device.api.app.component.Label;
-
-import coffeecatteam.bubbleburst.app.ApplicationGame;
-import coffeecatteam.bubbleburst.app.component.Sprite;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteBomb;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteBubble;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteCheese;
-import coffeecatteam.bubbleburst.app.component.sprites.SpriteCursor;
-import coffeecatteam.bubbleburst.app.layouts.LayoutStandard;
-import coffeecatteam.bubbleburst.util.Utils.Colors;
-import net.minecraft.client.Minecraft;
-
 public class LayoutGame extends LayoutStandard {
 
 	private Button buttonBack;
-	public Label labelVersion;
+    private Label labelVersion;
 
 	// Timer
-	public Label labelTimer;
+    private Label labelTimer;
 	private static long time;
 
 	private int maxGameTime = 30; //30 * 4; // 30 = 1 min
 	private int timer = 0;
 
 	private long newTime;
-	public long minTime = 1000 * 1;
-	public long maxTime = 1000 * 2;
+    private long maxTime = 1000 * 2;
 
 	// Sprites
-	public SpriteCursor cursor;
-	public SpriteCheese cheese;
+    public SpriteCursor cursor;
 
-	public List<SpriteBubble> hydrogen_bubbles;
-	public List<SpriteBomb> bombs;
+    public List<SpriteBubble> hydrogen_bubbles;
+    public List<SpriteBomb> bombs;
 
 	// Score
 	public Label labelScore;
-	private long score = -4l;
-	private boolean canScoreUpdate = false;
+	private long score = -41;
 	private boolean resetScore = false;
 
 	// Bomb Count
 	public Label labelBombCount;
-	private long bombCount = 0l;
-	private boolean canBombCountUpdate = false;
+	private long bombCount = 1;
 	private boolean resetBombCount = false;
 
 	public LayoutGame(int width, int height, ApplicationGame application) {
@@ -70,16 +64,14 @@ public class LayoutGame extends LayoutStandard {
 		// Sprites
 		int bubblesAmount = this.application.getBubblesAmount();
 		for (int i = 0; i < bubblesAmount; i++) {
-			SpriteBubble hydrogen_bubble = new SpriteBubble(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10),
-					randInt(1, 3), this.application);
+			SpriteBubble hydrogen_bubble = new SpriteBubble(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(1, 3), this.application);
 			this.hydrogen_bubbles.add(hydrogen_bubble);
 			super.addComponent(this.hydrogen_bubbles.get(i));
 		}
 
 		int bombAmount = this.application.getBombsAmount();
 		for (int i = 0; i < bombAmount; i++) {
-			SpriteBomb bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(1, 3),
-					this.application);
+			SpriteBomb bomb = new SpriteBomb(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), randInt(1, 3), this.application);
 			this.bombs.add(bomb);
 			super.addComponent(this.bombs.get(i));
 		}
@@ -87,9 +79,6 @@ public class LayoutGame extends LayoutStandard {
 		// (this.width / 2) - 4, (this.height / 2) - 4
 		this.cursor = new SpriteCursor(5, this.height / 2);
 		super.addComponent(this.cursor);
-		
-		this.cheese = new SpriteCheese(this.width / 2, ((this.height / 2) - 4) + randInt(-10, 10), this.application);
-		//super.addComponent(this.cheese);
 
 		this.buttonBack = new Button(this.width - 45, 3, "Exit", Icons.HOME);
 		this.buttonBack.setToolTip("Exit", "Click or press E to exit to main menu."
@@ -153,7 +142,6 @@ public class LayoutGame extends LayoutStandard {
 
 			// Game Code
 			this.cursor.update(application, this, Minecraft.getMinecraft());
-			this.cheese.update(application, this, Minecraft.getMinecraft());
 			this.hydrogen_bubbles
 					.forEach(hydrogen_bubble -> hydrogen_bubble.update(application, this, Minecraft.getMinecraft()));
 			this.bombs.forEach(bomb -> bomb.update(application, this, Minecraft.getMinecraft()));
@@ -177,26 +165,15 @@ public class LayoutGame extends LayoutStandard {
 		// Score Check
 		if (this.score < 0)
 			this.score = 0;
-		if (this.canScoreUpdate && this.application.getCurrentLayout() == this)
-			updateScore(this.score, 0l, this.labelScore);
-		else
-			this.canScoreUpdate = true;
 
 		// Bomb Count Check
 		if (this.bombCount < 0)
 			this.bombCount = 0;
-		if (this.canBombCountUpdate && this.application.getCurrentLayout() == this)
-			updateBombCount(this.bombCount, 0l, this.labelBombCount);
-		else
-			this.canBombCountUpdate = true;
 	}
 
 	/*
 	 * Game methods
 	 */
-	public long getNewTime() {
-		return newTime;
-	}
 
 	public int getCurrentGameTime() {
 		return maxGameTime - timer;
@@ -208,20 +185,12 @@ public class LayoutGame extends LayoutStandard {
 
 	public void resetScore() {
 		resetScore = true;
-		this.application.setTopScore(0l);
+		this.application.setTopScore(1);
 	}
 
 	public void resetBombCount() {
 		resetBombCount = true;
-		this.application.setTopBombCount(0l);
-	}
-
-	public String[] getTime(long time) {
-		return new SimpleDateFormat("mm:ss:SSS").format(new Date(time)).split(":");
-	}
-
-	public boolean inTime(long time, long minTime, long maxTime) {
-		return time >= minTime && time <= maxTime;
+		this.application.setTopBombCount(1);
 	}
 
 	// Score Label Check
@@ -246,10 +215,6 @@ public class LayoutGame extends LayoutStandard {
 		return bombCount;
 	}
 
-	public void setBombCount(long bombCount) {
-		this.bombCount = bombCount;
-	}
-
 	public void updateBombCount(long bombCount, long amount, Label label) {
 		bombCount += amount;
 		label.setText("Bombs hit: " + this.bombCount);
@@ -262,7 +227,7 @@ public class LayoutGame extends LayoutStandard {
 		this.application.save(Minecraft.getMinecraft().player.getEntityData());
 	}
 
-	public Color getColorFromValue(long value) {
+	private Color getColorFromValue(long value) {
 		Colors color = value >= 25000 ? Colors.DARK_BLUE
 				: value >= 20000 ? Colors.CYAN
 						: value >= 15000 ? Colors.PURPLE
@@ -283,11 +248,5 @@ public class LayoutGame extends LayoutStandard {
 
 	public static int randInt(int min, int max) {
 		return min + (int) (Math.random() * (max - min + 1));
-	}
-
-	public static float randFloat(float min, float max) {
-		float out = min + (float) (Math.random() * (max - min + 1));
-		System.out.println(out);
-		return out;
 	}
 }
