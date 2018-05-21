@@ -24,7 +24,7 @@ public abstract class Sprite extends Component {
 	private int MAX_PROGRESS = 8 * (8 ^ MAX_PROGRESS_OFF);
 	private int currentProgress = 0;
 
-	private Color color = Color.WHITE;
+	protected Color color = Color.WHITE;
 
 	private ResourceLocation sprite;
 	private int textureWidth;
@@ -146,15 +146,12 @@ public abstract class Sprite extends Component {
 	protected void render(Laptop laptop, Minecraft mc, int x, int y, int mouseX, int mouseY, boolean windowActive,
 			float partialTicks) {
 		if (this.visible) {
-			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F,
-					color.getAlpha() / 255F);
+			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, color.getAlpha() / 255F);
 
 			GlStateManager.scale(scale, scale, 1);
 			mc.getTextureManager().bindTexture(sprite);
 
-			drawModalRectWithCustomSizedTexture(xPosition, yPosition, (float) ((currentProgress % 8) * 16 * scale),
-					(float) (16 + 16 * (int) Math.floor((double) currentProgress / 8) * scale), 16, 16, textureWidth,
-					textureHeight);
+			drawModalRectWithCustomSizedTexture(xPosition, yPosition, (float) ((currentProgress % 8) * 16 * scale), (float) (16 + 16 * (int) Math.floor((double) currentProgress / 8) * scale), 16, 16, textureWidth, textureHeight);
 
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		}

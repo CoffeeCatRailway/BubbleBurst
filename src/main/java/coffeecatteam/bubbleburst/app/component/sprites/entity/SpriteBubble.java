@@ -1,4 +1,4 @@
-package coffeecatteam.bubbleburst.app.component.sprites;
+package coffeecatteam.bubbleburst.app.component.sprites.entity;
 
 import java.util.ArrayList;
 import java.util.List;
