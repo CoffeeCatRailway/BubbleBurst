@@ -1,11 +1,15 @@
 package coffeecatteam.bubbleburst.init;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
 import coffeecatteam.bubbleburst.Reference;
 import coffeecatteam.bubbleburst.init.items.ItemBase;
 import coffeecatteam.bubbleburst.init.items.ItemBomb;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -23,6 +27,11 @@ public class InitItem {
 	public static void init() {
 		fire_stick = new ItemBase("fire_stick", 1);
 		bomb = new ItemBomb("bomb", 10);
+//		try {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(GuiMainMenu.class.getResourceAsStream("")));
+//        } catch (Exception e) {
+//		    e.printStackTrace();
+//        }
 	}
 
 	@EventBusSubscriber(modid = Reference.MODID)
