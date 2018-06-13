@@ -26,7 +26,7 @@ public class LayoutInstructions extends LayoutStandard {
 
 	private Button buttonBack;
 	private Label labelVersion;
-	private Sprite bomb;
+	// private Sprite bomb;
 
 	private Text textInfo;
 
@@ -52,40 +52,40 @@ public class LayoutInstructions extends LayoutStandard {
 		this.labelVersion.setScale(1d);
 		super.addComponent(this.labelVersion);
 
-		this.bomb = new Sprite(50, 3, AnimationHandler.BOMB.get(0), 64, 64) {
-
-			private final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
-
-			private long time = new Date().getTime();
-
-			@Override
-			public void update(Application app, Layout layout, Minecraft mc) {
-				long currentTime = new Date().getTime();
-				long newTime = currentTime - time;
-
-				long minTime = 1000 * 1;
-				long maxTime = 1000 * 3;
-
-				if (newTime >= minTime && newTime <= maxTime) {
-					this.setTextureWidth(64);
-					this.setTextureHeight(32);
-					this.setSprite(EXPLOSION);
-				} else {
-					this.setTextureWidth(64);
-					this.setTextureHeight(64);
-					this.setSprite(AnimationHandler.BOMB.get(0));
-				}
-
-				if (newTime > maxTime) {
-					time = new Date().getTime();
-				}
-			}
-		};
-		super.addComponent(this.bomb);
+//		bomb = new Sprite(50, 3, AnimationHandler.BOMB.get(0), 64, 64) {
+//
+//			private final ResourceLocation EXPLOSION = new ResourceLocation(Reference.MODID, "textures/app/sprites/explosion.png");
+//
+//			private long time = new Date().getTime();
+//
+//			@Override
+//			public void update(Application app, Layout layout, Minecraft mc) {
+//				long currentTime = new Date().getTime();
+//				long newTime = currentTime - time;
+//
+//				long minTime = 1000 * 1;
+//				long maxTime = 1000 * 3;
+//
+//				if (newTime >= minTime && newTime <= maxTime) {
+//					this.setTextureWidth(64);
+//					this.setTextureHeight(32);
+//					this.setSprite(EXPLOSION);
+//				} else {
+//					this.setTextureWidth(64);
+//					this.setTextureHeight(64);
+//					this.setSprite(AnimationHandler.BOMB.get(0));
+//				}
+//
+//				if (newTime > maxTime) {
+//					time = new Date().getTime();
+//				}
+//			}
+//		};
+//		super.addComponent(this.bomb);
 
 		this.textInfo = new Text("", 3, 35, 115);
 		this.textInfo.setTextColor(Color.DARK_GRAY);
-		this.textInfo.setText("\n\nControls:" + "\n- Click and drag/hold to move the \"fire stick\"");
+		this.textInfo.setText("\n\nControls:" + "\n- Move the mouse/cursor to move the \"fire stick\"");
 		super.addComponent(this.textInfo);
 
 		this.textInfo = new Text("", 115, 3, 145);
@@ -109,7 +109,7 @@ public class LayoutInstructions extends LayoutStandard {
 
 	public void onTick() {
 		if (this.application.getCurrentLayout() == this) {
-			this.bomb.update(application, this, Minecraft.getMinecraft());
+			// this.bomb.update(application, this, Minecraft.getMinecraft());
 		}
 	}
 }

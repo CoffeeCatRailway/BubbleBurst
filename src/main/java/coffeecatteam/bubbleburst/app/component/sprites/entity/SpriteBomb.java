@@ -41,16 +41,16 @@ public class SpriteBomb extends SpriteEnemy {
                         if (!bomb.isSuper) {
                             // X Distance
                             int xd = bomb.xPosition - this.xPosition; // getDistance(bomb);
-                            xd = negToPos(xd);
+                            // xd = negToPos(xd);
                             // Y Distance
                             int yd = bomb.yPosition - this.yPosition; // getDistance(bomb);
-                            yd = negToPos(yd);
+                            // yd = negToPos(yd);
                             System.out.println(i + " -x- " + xd + " -y- " + yd);
 
-                            int d = (int) Math.sqrt(xd*xd+yd*yd);
-                            System.out.println(i + " - " + d);
-
-                            if (d <= 20) {
+                            int maxD = 20;
+                            boolean xdB = (xd < 0) ? (xd >= -maxD) : (xd <= maxD);
+                            boolean ydB = (yd < 0) ? (yd >= -maxD) : (yd <= maxD);
+                            if (xdB && ydB) {
                                 bomb.setCanMove(false);
                                 scoreMultiple++;
                             }
