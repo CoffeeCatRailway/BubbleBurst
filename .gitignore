@@ -20,3 +20,8 @@ build
 # other
 eclipse
 run
+
+classes
+docs
+mod_build.bat
+libs
