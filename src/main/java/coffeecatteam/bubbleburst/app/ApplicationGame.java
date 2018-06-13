@@ -17,6 +17,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
+
 public class ApplicationGame extends Application {
 
 	// Start Menu
@@ -73,7 +75,7 @@ public class ApplicationGame extends Application {
 		this.gameVolume = gameVolume;
 	}
 
-	public void init() {
+	public void init(@Nullable NBTTagCompound intent) {
 		// Layouts
 		this.layoutGame = new LayoutGame(200, 100, this);
 

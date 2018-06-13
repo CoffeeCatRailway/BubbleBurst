@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "2.3-pre2"
+version = "3.1"
 group = "coffeecatteam.bubble_burst"
 archivesBaseName = "BubbleBurst"
 
@@ -22,7 +22,7 @@ compileJava {
 minecraft {
     version = "1.12.2-14.23.2.2611"
     runDir = "run"
-    
+
     mappings = "snapshot_20171003"
 }
 
@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile "com.mrcrayfish:device-api:0.3.0-1.12.2"
+    compile "com.mrcrayfish:device-api:0.4.0-1.12.2"
 }
 
 processResources {
@@ -40,10 +40,10 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
+
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }

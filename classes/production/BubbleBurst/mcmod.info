@@ -1,0 +1,13 @@
+[
+{
+  "modid": "bubble_burst",
+  "name": "Bubble Burst",
+  "description": "Burst the bubbles!",
+  "version": "3.1",
+  "mcversion": "${mcversion}",
+  "url": "https://minecraft.curseforge.com/projects/bubble-burst",
+  "authorList": ["CoffeeCatTeam"],
+  "logoFile": "logo.png",
+  "credit": "MrCrayfish"
+}
+]

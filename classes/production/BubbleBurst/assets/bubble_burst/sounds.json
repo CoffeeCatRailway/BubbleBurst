@@ -1,0 +1,11 @@
+{
+  "bubble_pop": {
+    "sounds": [ {"name": "bubble_burst:bubble_pop"}]
+  },
+  "bomb_1": {
+    "sounds": [ {"name": "bubble_burst:bomb_1"}]
+  },
+  "bomb_2": {
+    "sounds": [ {"name": "bubble_burst:bomb_2"}]
+  }
+}
