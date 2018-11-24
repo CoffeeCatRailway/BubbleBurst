@@ -5,8 +5,10 @@
     "version": "1.1",
     "icon": "bubble_burst:textures/app/icon/bubble_game.png",
     "screenshots": [
-        "textures/app/screenshots/screenshot1.png",
-        "textures/app/screenshots/screenshot2.png",
-        "textures/app/screenshots/screenshot3.png"
+        "textures/app/screenshots/game/screenshot1.png",
+        "textures/app/screenshots/game/screenshot2.png",
+        "textures/app/screenshots/game/screenshot3.png",
+        "textures/app/screenshots/game/screenshot4.png",
+        "textures/app/screenshots/game/screenshot5.png"
     ]
 }

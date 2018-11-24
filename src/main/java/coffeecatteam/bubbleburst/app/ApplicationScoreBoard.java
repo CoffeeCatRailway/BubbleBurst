@@ -1,48 +1,25 @@
 package coffeecatteam.bubbleburst.app;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
-
+import coffeecatteam.bubbleburst.Reference;
+import coffeecatteam.bubbleburst.util.handlers.score.PlayerScoreHolder;
+import coffeecatteam.bubbleburst.util.handlers.score.ScoreboardHandler;
 import com.mrcrayfish.device.api.app.Application;
 import com.mrcrayfish.device.api.app.Component;
 import com.mrcrayfish.device.api.app.Icons;
-import com.mrcrayfish.device.api.app.component.Button;
-import com.mrcrayfish.device.api.app.component.Image;
-import com.mrcrayfish.device.api.app.component.ItemList;
-import com.mrcrayfish.device.api.app.component.Label;
-import com.mrcrayfish.device.api.app.component.Text;
-
-import coffeecatteam.bubbleburst.Reference;
-import coffeecatteam.bubbleburst.util.handlers.score.PlayerScoreHolder;
-import coffeecatteam.bubbleburst.util.handlers.score.ScoreboardFileHandler;
+import com.mrcrayfish.device.api.app.component.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
+import java.util.*;
+
 public class ApplicationScoreBoard extends Application {
 
-	private static ScoreboardFileHandler sbf;
-
-	public static final List<PlayerScoreHolder> SCORES = new ArrayList<>();
+	private static final List<PlayerScoreHolder> SCORES = new ArrayList<>();
 	private static ItemList<String> listScores;
-	
-	private Text textScoreInfo;
 
-	private Image background;
-
-	private Button buttonBack;
-	private Label labelVersion;
-
-	public static final int WIDTH = 200;
-	public static final int HEIGHT = 150;
+    private static final int WIDTH = 200;
+    private static final int HEIGHT = 150;
 
 	public ApplicationScoreBoard() {
 		this.setDefaultWidth(WIDTH);
@@ -50,24 +27,20 @@ public class ApplicationScoreBoard extends Application {
 	}
 
 	@Override
-	public void init() {
-		ScoreboardFileHandler.init();
-		sbf = new ScoreboardFileHandler();
-		
-		this.background = new Image(0, 0, WIDTH, HEIGHT, 0, 0, 256, 255,
-				new ResourceLocation(Reference.MODID, "textures/app/backgrounds/scoreboard.png"));
-		super.addComponent(this.background);
+	public void init(@Nullable NBTTagCompound intent) {
+        Image background = new Image(0, 0, WIDTH, HEIGHT, 0, 0, 256, 255, new ResourceLocation(Reference.MODID, "textures/app/backgrounds/scoreboard.png"));
+		super.addComponent(background);
 
-		this.labelVersion = new Label("Version: " + this.getInfo().getVersion(), WIDTH - 5, 8);
-		this.labelVersion.setAlignment(Component.ALIGN_RIGHT);
-		this.labelVersion.setScale(1d);
-		super.addComponent(this.labelVersion);
+        Label labelVersion = new Label("Version: " + this.getInfo().getVersion(), WIDTH - 5, 8);
+		labelVersion.setAlignment(Component.ALIGN_RIGHT);
+		labelVersion.setScale(1d);
+		super.addComponent(labelVersion);
 
-		listScores = new ItemList<String>(5, 27, WIDTH - 10, 5);
+		listScores = new ItemList<>(5, 27, WIDTH - 10, 5);
 		refreshScores();
-		super.addComponent(this.listScores);
-		
-		textScoreInfo = new Text("meow", 25, 100, WIDTH - 10);
+		super.addComponent(listScores);
+
+        Text textScoreInfo = new Text("meow", 25, 100, WIDTH - 10);
 		super.addComponent(textScoreInfo);
 
 		Button refreshScores = new Button(5, 100, Icons.RELOAD);
@@ -76,12 +49,6 @@ public class ApplicationScoreBoard extends Application {
 				refreshScores();
 		});
 		super.addComponent(refreshScores);
-	}
-
-	@Override
-	public void onClose() {
-		saveScores();
-		super.onClose();
 	}
 
 	@Override
@@ -111,14 +78,8 @@ public class ApplicationScoreBoard extends Application {
 				}
 			}
 		}
-		
-		Collections.sort(SCORES, new Comparator<PlayerScoreHolder>() {
-		    @Override
-		    public int compare(PlayerScoreHolder lhs, PlayerScoreHolder rhs) {
-		        // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-		        return lhs.getPlayerScore() > rhs.getPlayerScore() ? -1 : (lhs.getPlayerScore() < rhs.getPlayerScore()) ? 1 : 0;
-		    }
-		});
+
+        SCORES.sort(Comparator.comparingLong(PlayerScoreHolder::getPlayerScore));
 	}
 
 	/**
@@ -129,75 +90,27 @@ public class ApplicationScoreBoard extends Application {
 		if (listScores.getItems().size() > 0)
 			listScores.getItems().clear();
 		
-		File scoreboard = sbf.getFile(sbf.GLOBAL_SCOREBOARD).getAbsoluteFile();
+		Map<UUID, PlayerScoreHolder> scoreboard = ScoreboardHandler.INSTANCE.getScoreboard();
 		List<PlayerScoreHolder> scoresTmp = new ArrayList<>();
-		if (scoreboard.exists()) {
-			try {
-				Scanner scn = new Scanner(new BufferedReader(new FileReader(scoreboard)));
-				String line = null;
-				
-				if (scn.hasNextLine())
-					line = scn.nextLine();
-				while (scn.hasNextLine()) {
-					scoresTmp.add(new PlayerScoreHolder(line.split(", ")[0], Integer.valueOf(line.split(", ")[1])));
-					line = scn.nextLine();
-				}
-				scn.close();
-				
-				SCORES.clear();
-				SCORES.addAll(scoresTmp);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		SCORES.forEach(score -> listScores.addItem(score.getPlayerName() + ", " + score.getPlayerScore()));
+		scoreboard.forEach(((uuid, playerScoreHolder) -> scoresTmp.add(playerScoreHolder)));
+		SCORES.clear();
+		SCORES.addAll(scoresTmp);
+
+		List<String> scores = new ArrayList<>();
+		for (PlayerScoreHolder holder : SCORES) {
+            if (!scores.contains(holder.getPlayerName())) {
+                scores.add(holder.getPlayerName());
+                listScores.addItem(holder.getPlayerName());
+            }
+        }
 		listScores.setSelectedIndex(-1);
 	}
 
 	/**
 	 * Adds the player's score to the global scoreboard.
 	 * Will also save and refresh scoreboard.
-	 * 
-	 * @param player
-	 * @param score
 	 */
 	public static void addScore(String player, long score) {
-		addScore(new PlayerScoreHolder(player, score));
-	}
-
-	/**
-	 * Adds the player's score to the global scoreboard.
-	 * Will also save and refresh scoreboard.
-	 * 
-	 * @param playerScore
-	 */
-	public static void addScore(PlayerScoreHolder playerScore) {
-		SCORES.add(playerScore);
-		saveScores();
-	}
-	
-	/**
-	 * Save scores to saves/CURRENT_WORLD/bubbleburst_scoreboards/golbal.scoreboard file.
-	 */
-	public static void saveScores() {
-		refreshScores();
-		sortScores();
-		try {
-			sbf.createFile(sbf.GLOBAL_SCOREBOARD);
-
-			FileWriter sb = sbf.getFileWriter(sbf.GLOBAL_SCOREBOARD);
-			SCORES.forEach(psh -> {
-				try {
-					sb.write(psh.getPlayerName() + ", " + String.valueOf(psh.getPlayerScore())+"\n");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			});
-			sb.write("\n");
-			sb.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        SCORES.add(new PlayerScoreHolder(player, score));
 	}
 }
